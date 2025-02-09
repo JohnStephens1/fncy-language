@@ -1,12 +1,14 @@
 #![allow(dead_code)]
 #![allow(unused_variables)]
+#![allow(unused_imports)]
 
 mod config;
 mod lexer;
+mod parser;
 
 fn main() {
     // println!("main");
     // config::print_config();
     lexer::lexer::main();
-
+    parser::parser::main();
 }
