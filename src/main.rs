@@ -1,3 +1,8 @@
+mod config;
+mod lexer;
+
 fn main() {
-    println!("Hello, world!");
+    println!("main");
+    config::print_config();
+    lexer::lexer::main();
 }
