@@ -1,0 +1,14 @@
+fun multiply_two_numbers(num_1: int, num_2: int) -> int {
+	num_1*num_2;
+}
+
+
+fun main() {
+	number_1: int = 15
+	number_2: int = 30
+	result: vint = 0
+
+	result = multiply_two_numbers(number_1, number_2)
+
+	print(f'result: {result}')
+}
