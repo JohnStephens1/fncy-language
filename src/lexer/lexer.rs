@@ -29,6 +29,33 @@ fn lexing_logic(raw_text: String) {
     }
 }
 
+fn get_character_iterator(text: &String) -> std::str::Chars {
+    text.chars()
+}
+
+
+fn something_loop(text: &String) -> (Vec<usize>, Vec<usize>) {
+    let mut paranthesis_open_idx: Vec<usize> = Vec::new();
+    let mut paranthesis_close_idx: Vec<usize> = Vec::new();
+
+    for (i, char) in get_character_iterator(text).enumerate() {
+        println!("{i}: {char}");
+        match char {
+            '(' => paranthesis_open_idx.push(i),
+            ')' => paranthesis_close_idx.push(i),
+            _ => (),
+        }
+    }
+
+    return (paranthesis_open_idx, paranthesis_close_idx)
+}
+
+fn print_character_for_idx(text: &String, idx_vec: Vec<usize>) {
+    for idx in idx_vec {
+        println!("idx: {idx}\nchar at idx: {}", text.chars().nth(idx).unwrap());
+    }
+}
+
 
 fn read_sample_file() -> String{
     let contents: String = fs::read_to_string( "src/sample_files/first_example_file.fncy")
@@ -43,7 +70,10 @@ fn print_sample_file() {
 
 fn start_lexing() {
     let raw_text: String = read_sample_file();
-    lexing_logic(raw_text);
+    // lexing_logic(raw_text);
+    let (paranthesis_open_idx, paranthesis_close_idx) = something_loop(&raw_text);
+    print_character_for_idx(&raw_text, paranthesis_open_idx);
+    print_character_for_idx(&raw_text, paranthesis_close_idx);
 }
 
 pub fn main() {
