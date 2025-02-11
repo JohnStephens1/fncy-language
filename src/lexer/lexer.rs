@@ -114,7 +114,6 @@ fn match_grouping_symbol(idx: &mut types::Idx, char: &char, i: usize) {
         '>' => idx.grouping_symbols.angle_brackets.closed.push(i),
         _ => ()
     }
-
 }
 
 fn iterate_over_text() -> types::Idx {
