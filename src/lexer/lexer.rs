@@ -102,7 +102,20 @@ fn start_lexing() {
 }
 
 
+fn match_grouping_symbol(idx: &mut types::Idx, char: &char, i: usize) {
+    match char {
+        '(' => idx.grouping_symbols.parentheses.open.push(i),
+        ')' => idx.grouping_symbols.parentheses.closed.push(i),
+        '[' => idx.grouping_symbols.brackets.open.push(i),
+        ']' => idx.grouping_symbols.brackets.closed.push(i),
+        '{' => idx.grouping_symbols.braces.open.push(i),
+        '}' => idx.grouping_symbols.braces.closed.push(i),
+        '<' => idx.grouping_symbols.angle_brackets.open.push(i),
+        '>' => idx.grouping_symbols.angle_brackets.closed.push(i),
+        _ => ()
+    }
 
+}
 
 fn iterate_over_text() -> types::Idx {
     let text = read_sample_file();
@@ -110,11 +123,7 @@ fn iterate_over_text() -> types::Idx {
     // let smth = GroupingSymbol::new();
 
     for (i, char) in text.chars().enumerate() {
-        match char {
-            '(' => idx.grouping_symbols.parentheses.open.push(i),
-            ')' => idx.grouping_symbols.parentheses.closed.push(i),
-            _ => ()
-        }
+        match_grouping_symbol(&mut idx, &char, i);
     }
 
     for open_idx in &idx.grouping_symbols.parentheses.open {
