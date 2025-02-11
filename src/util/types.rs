@@ -14,6 +14,15 @@ pub struct GroupingSymbol {
     pub closed: Vec<usize>,
 }
 
+#[derive(Default)]
+pub struct Idx {
+    pub grouping_symbols: GroupingSymbols
+}
+
+
+
+
+
 // impl GroupingSymbol {
 //     // just calling open.push(idx) works fine xd
 //     pub fn add_open(&mut self, idx: usize) {
@@ -24,13 +33,3 @@ pub struct GroupingSymbol {
 //         self.closed.push(idx);
 //     }
 // }
-
-#[derive(Default)]
-pub struct Idx {
-    pub grouping_symbols: GroupingSymbols
-}
-
-
-pub fn main() {
-    // 
-}
