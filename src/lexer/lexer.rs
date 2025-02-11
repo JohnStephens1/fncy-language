@@ -35,9 +35,6 @@ fn get_character_iterator(text: &String) -> std::str::Chars {
 
 
 struct CharacterIdx {
-    struct paranthesis {
-        
-    }
     paranthesis_open_idx: Vec<usize>,
     paranthesis_close_idx: Vec<usize>,
     curly_open_idx: Vec<usize>,

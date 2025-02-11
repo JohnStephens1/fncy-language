@@ -5,10 +5,12 @@
 mod config;
 mod lexer;
 mod parser;
+mod util;
 
 fn main() {
     // println!("main");
     // config::print_config();
     lexer::lexer::main();
     parser::parser::main();
+    util::types::main();
 }

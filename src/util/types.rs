@@ -1,41 +1,29 @@
 // grouping symbols
 struct GroupingSymbols {
-    parentheses: GeneralThingy,
-    brackets: GeneralThingy,
-    braces: GeneralThingy,
-    angle_brackets: GeneralThingy
+    parentheses: GroupingSymbol,
+    brackets: GroupingSymbol,
+    braces: GroupingSymbol,
+    angle_brackets: GroupingSymbol
 }
 
-struct GeneralThingy {
+struct GroupingSymbol {
     open: Vec<usize>,
     closed: Vec<usize>,
 }
 
-impl GeneralThingy {
-    fn add_open() {}
+impl GroupingSymbol {
+    fn add_open(&mut self, idx: usize) {
+        self.open.push(idx);
+    }
+
+    fn add_closed(&mut self, idx: usize) {
+        self.closed.push(idx);
+    }
+
+    // fn add(&mut self, open_close: OpenClose, idx: usize) {
+    //     self.open_close.push(idx);
+    // }
 }
-
-struct Parentheses {
-    open: Vec<usize>,
-    closed: Vec<usize>
-}
-
-struct Brackets {
-    open: Vec<usize>,
-    closed: Vec<usize>
-}
-
-struct Braces {
-    open: Vec<usize>,
-    closed: Vec<usize>
-}
-
-struct AngleBrackets {
-    open: Vec<usize>,
-    closed: Vec<usize>
-}
-
-
 
 struct CharacterIdx {
 
