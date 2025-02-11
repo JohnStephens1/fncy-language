@@ -15,26 +15,15 @@ pub struct GroupingSymbol {
 }
 
 // impl GroupingSymbol {
-//     pub fn new(&mut self) {
-//         self.open = Vec::new();
-//         self.closed = Vec::new();
+//     // just calling open.push(idx) works fine xd
+//     pub fn add_open(&mut self, idx: usize) {
+//         self.open.push(idx);
+//     }
+
+//     pub fn add_closed(&mut self, idx: usize) {
+//         self.closed.push(idx);
 //     }
 // }
-
-impl GroupingSymbol {
-    // just calling open.push(idx) works fine xd
-    pub fn add_open(&mut self, idx: usize) {
-        self.open.push(idx);
-    }
-
-    pub fn add_closed(&mut self, idx: usize) {
-        self.closed.push(idx);
-    }
-
-    // fn add(&mut self, open_close: OpenClose, idx: usize) {
-    //     self.open_close.push(idx);
-    // }
-}
 
 #[derive(Default)]
 pub struct Idx {
