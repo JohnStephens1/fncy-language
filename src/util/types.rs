@@ -1,22 +1,33 @@
 // grouping symbols
-struct GroupingSymbols {
-    parentheses: GroupingSymbol,
-    brackets: GroupingSymbol,
-    braces: GroupingSymbol,
-    angle_brackets: GroupingSymbol
+
+#[derive(Default)]
+pub struct GroupingSymbols {
+    pub parentheses: GroupingSymbol,
+    pub brackets: GroupingSymbol,
+    pub braces: GroupingSymbol,
+    pub angle_brackets: GroupingSymbol
 }
 
-struct GroupingSymbol {
-    open: Vec<usize>,
-    closed: Vec<usize>,
+#[derive(Default)]
+pub struct GroupingSymbol {
+    pub open: Vec<usize>,
+    pub closed: Vec<usize>,
 }
+
+// impl GroupingSymbol {
+//     pub fn new(&mut self) {
+//         self.open = Vec::new();
+//         self.closed = Vec::new();
+//     }
+// }
 
 impl GroupingSymbol {
-    fn add_open(&mut self, idx: usize) {
+    // just calling open.push(idx) works fine xd
+    pub fn add_open(&mut self, idx: usize) {
         self.open.push(idx);
     }
 
-    fn add_closed(&mut self, idx: usize) {
+    pub fn add_closed(&mut self, idx: usize) {
         self.closed.push(idx);
     }
 
@@ -25,10 +36,10 @@ impl GroupingSymbol {
     // }
 }
 
-struct CharacterIdx {
-
+#[derive(Default)]
+pub struct Idx {
+    pub grouping_symbols: GroupingSymbols
 }
-
 
 
 pub fn main() {

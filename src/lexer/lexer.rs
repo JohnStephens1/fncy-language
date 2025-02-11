@@ -1,5 +1,6 @@
 // use std::env;
-use std::fs;
+use std::{char, fs};
+use crate::util::types::{self, GroupingSymbol};
 
 
 // fn get_quote_splits(string: String) -> Vec<&str> {
@@ -100,6 +101,34 @@ fn start_lexing() {
     print_character_for_idx(&raw_text, &paranthesis_close_idx);
 }
 
+
+
+
+fn iterate_over_text() -> types::Idx {
+    let text = read_sample_file();
+    let mut idx = types::Idx::default();
+    // let smth = GroupingSymbol::new();
+
+    for (i, char) in text.chars().enumerate() {
+        match char {
+            '(' => idx.grouping_symbols.parentheses.open.push(i),
+            ')' => idx.grouping_symbols.parentheses.closed.push(i),
+            _ => ()
+        }
+    }
+
+    for open_idx in &idx.grouping_symbols.parentheses.open {
+        for (i, char) in text.chars().enumerate() {
+            if &i == open_idx {
+                println!("i: {i} char: {char} open idx: {open_idx}");
+            }
+        }
+    }
+
+    idx
+}
+
 pub fn main() {
-    start_lexing();
+    // start_lexing();
+    iterate_over_text();
 }

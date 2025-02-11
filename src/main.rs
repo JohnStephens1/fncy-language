@@ -11,6 +11,6 @@ fn main() {
     // println!("main");
     // config::print_config();
     lexer::lexer::main();
-    parser::parser::main();
-    util::types::main();
+    // parser::parser::main();
+    // util::types::main();
 }
