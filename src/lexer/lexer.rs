@@ -22,6 +22,7 @@ fn print_sample_file() {
 fn handle_match(idx: &mut types::Idx, char: &char, i: usize) {
     // for now back to chonky match
     match char {
+        // grouping symbols
         '(' => idx.grouping_symbols.parentheses.open.push(i),
         ')' => idx.grouping_symbols.parentheses.closed.push(i),
         '[' => idx.grouping_symbols.brackets.open.push(i),
@@ -30,6 +31,8 @@ fn handle_match(idx: &mut types::Idx, char: &char, i: usize) {
         '}' => idx.grouping_symbols.braces.closed.push(i),
         '<' => idx.grouping_symbols.angle_brackets.open.push(i),
         '>' => idx.grouping_symbols.angle_brackets.closed.push(i),
+
+        // math symbols
         _ => ()
     }
 }

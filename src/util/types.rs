@@ -16,7 +16,50 @@ pub struct GroupingSymbol {
 
 #[derive(Default)]
 pub struct Idx {
-    pub grouping_symbols: GroupingSymbols
+    pub grouping_symbols: GroupingSymbols,
+    pub symbols: Symbols
+}
+
+
+#[derive(Default)]
+pub struct Symbols {
+    pub minus: Vec<usize>,
+    pub plus: Vec<usize>,
+    pub asterisk: Vec<usize>,
+    pub slash: Vec<usize>,
+    pub backslash: Vec<usize>,
+
+    pub equal: Vec<usize>,
+
+    pub and: Vec<usize>,
+    pub or: Vec<usize>,
+    pub exclamation_mark: Vec<usize>,
+    pub question_mark: Vec<usize>,
+
+    pub tilde: Vec<usize>,
+
+
+    pub comma: Vec<usize>,
+    pub semicolon: Vec<usize>,
+    pub dot: Vec<usize>,
+    pub colon: Vec<usize>,
+
+    pub apostrophe: Vec<usize>,
+    pub quotation_mark: Vec<usize>,
+
+    pub forward_tick: Vec<usize>,
+    pub back_tick: Vec<usize>,
+
+
+    pub dollar: Vec<usize>,
+    pub percent: Vec<usize>,
+    pub caret: Vec<usize>,
+    pub degree: Vec<usize>,
+
+    pub hash: Vec<usize>,
+    pub at: Vec<usize>,
+
+    pub underscore: Vec<usize>,
 }
 
 
