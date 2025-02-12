@@ -1,5 +1,3 @@
-// grouping symbols
-
 #[derive(Default)]
 pub struct GroupingSymbols {
     pub parentheses: GroupingSymbol,
