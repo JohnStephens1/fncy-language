@@ -112,6 +112,7 @@ pub fn get_symbol_idx_and_chars_from_file(path: &Path) -> (types::Idx, Vec<char>
 
 
 
+#[allow(dead_code)]
 pub fn test_char_shenanigans(text_chars: &Vec<char>, symbol_idx: &types::Idx) {
     let mut i = 0;
 
