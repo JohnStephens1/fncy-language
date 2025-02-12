@@ -1,23 +1,7 @@
 // use std::env;
-use std::{char, fs};
-use crate::util::types::{self, GroupingSymbol, Symbols};
+use std::{char, fs, path::Path};
+use crate::util::types;
 
-
-fn get_splits_parentheses(text: &String) -> Vec<&str> {
-    let split_text: Vec<&str> = text.split(['(', ')']).collect();
-    return split_text
-}
-
-fn read_sample_file() -> String{
-    let contents: String = fs::read_to_string( "src/sample_files/first_example_file.fncy")
-        .expect("Should have been able to read the file");
-    contents
-}
-
-fn print_sample_file() {
-    let content: String = read_sample_file();
-    println!("file content:\n\n{content}");
-}
 
 fn handle_match(idx: &mut types::Idx, char: &char, i: usize) {
     // for now back to chonky match
@@ -73,30 +57,83 @@ fn handle_match(idx: &mut types::Idx, char: &char, i: usize) {
     }
 }
 
-fn get_symbol_idx_from_text(text: &String) -> types::Idx {
-    let mut idx = types::Idx::default();
 
-    for (i, char) in text.chars().enumerate() {
-        handle_match(&mut idx, &char, i);
+fn read_file(path: &Path) -> String{
+    let contents: String = fs::read_to_string(path)
+        .expect("Should have been able to read the file");
+
+    contents
+}
+
+fn normalize_whitespaces(chars: Vec<char>) -> Vec<char> {
+    let mut prev_char_was_whitespace = false;
+    let mut result: Vec<char> = Vec::new();
+
+    for char in chars {
+        if char.is_whitespace() {
+            if !prev_char_was_whitespace {
+                result.push(' ');
+                prev_char_was_whitespace = true;
+            }
+        } else {
+            result.push(char);
+            prev_char_was_whitespace = false;
+        }
     }
 
-    // for open_idx in &idx.grouping_symbols.parentheses.open {
-    //     for (i, char) in text.chars().enumerate() {
-    //         if &i == open_idx {
-    //             println!("i: {i} char: {char} open idx: {open_idx}");
-    //         }
-    //     }
-    // }
+    result
+}
+
+fn get_processed_text(path: &Path) -> Vec<char> {
+    let text_raw = read_file(path);
+    let text_chars_raw: Vec<char> = text_raw.chars().collect();
+    let text_chars = normalize_whitespaces(text_chars_raw);
+
+    text_chars
+}
+
+
+fn get_symbol_idx_from_char_vec(text: &Vec<char>) -> types::Idx {
+    let mut idx = types::Idx::default();
+
+    for (i, char) in text.iter().enumerate() {
+        handle_match(&mut idx, &char, i);
+    }
 
     idx
 }
 
-pub fn main() {
-    // start_lexing();
-    let text = read_sample_file();
-    let idx = get_symbol_idx_from_text(&text);
+pub fn get_symbol_idx_and_chars_from_file(path: &Path) -> (types::Idx, Vec<char>) {
+    let text = get_processed_text(path);
+    let symbol_idx = get_symbol_idx_from_char_vec(&text);
 
-    for colon in idx.symbols.colon {
-        println!("dis a colon: {colon}");
+    (symbol_idx, text)
+}
+
+
+pub fn main() {
+    let sample_file_path = Path::new("src/sample_files/first_example_file.fncy");
+    let (symbol_idx, text_chars) = get_symbol_idx_and_chars_from_file(sample_file_path);
+
+    test_char_shenanigans(&text_chars, &symbol_idx);
+}
+
+
+
+
+fn test_char_shenanigans(text_chars: &Vec<char>, symbol_idx: &types::Idx) {
+    let mut i = 0;
+
+    for char in text_chars {
+        println!("loop number: {i}");
+        println!("text_char: {char}");
+        println!("text_chars[my_int]: {}", text_chars[i]);
+
+        if symbol_idx.symbols.colon.contains(&i) {
+            println!("SYMBOL COLON FOUND AT {i}");
+        }
+
+        println!();
+        i += 1;
     }
 }
