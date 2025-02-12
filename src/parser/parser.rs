@@ -3,7 +3,5 @@ use crate::lexer::lexer;
 
 
 pub fn main() {
-    println!("parser");
-    // types::KEYWORDS;
-    // lexer::main();
+    // 
 }
