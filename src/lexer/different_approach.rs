@@ -84,13 +84,15 @@ fn update_string(original_string: String) -> String {
 }
 
 
-pub fn main() {
+pub fn main() -> String{
     let sample_file_path = Path::new("src/sample_files/first_example_file.fncy");
     let original_text: String = read_file(sample_file_path);
 
     let updated_text = update_string(original_text);
 
-    println!("updated_text: {updated_text}");
+    // println!("updated_text: {updated_text}");
+
+    updated_text
 
     // let split_boi: Vec<String> = trimmed_text.split_inclusive("(").map(String::from).collect();
 }
