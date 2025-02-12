@@ -19,8 +19,8 @@ fn print_sample_file() {
     println!("file content:\n\n{content}");
 }
 
-
-fn match_grouping_symbol(idx: &mut types::Idx, char: &char, i: usize) {
+fn handle_match(idx: &mut types::Idx, char: &char, i: usize) {
+    // for now back to chonky match
     match char {
         '(' => idx.grouping_symbols.parentheses.open.push(i),
         ')' => idx.grouping_symbols.parentheses.closed.push(i),
@@ -39,16 +39,16 @@ fn iterate_over_text() -> types::Idx {
     let mut idx = types::Idx::default();
 
     for (i, char) in text.chars().enumerate() {
-        match_grouping_symbol(&mut idx, &char, i);
+        handle_match(&mut idx, &char, i);
     }
 
-    for open_idx in &idx.grouping_symbols.parentheses.open {
-        for (i, char) in text.chars().enumerate() {
-            if &i == open_idx {
-                println!("i: {i} char: {char} open idx: {open_idx}");
-            }
-        }
-    }
+    // for open_idx in &idx.grouping_symbols.parentheses.open {
+    //     for (i, char) in text.chars().enumerate() {
+    //         if &i == open_idx {
+    //             println!("i: {i} char: {char} open idx: {open_idx}");
+    //         }
+    //     }
+    // }
 
     idx
 }
