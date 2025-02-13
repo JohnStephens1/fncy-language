@@ -43,30 +43,12 @@ fn rustify_code(code: &Vec<String>) -> Vec<String> {
 }
 
 fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
-    // // first attempt
-    // let mut count = 0;
-    // let mut matched: Vec<String> = Vec::new();
-    // let mut result: Vec<String> = Vec::new();
-
-    // for string in vec {
-    //     if string == "{" {
-    //         count += 1;
-    //     } else if string == "}" {
-    //         if count == 1 {
-    //             result.push(matched.join(" "));
-    //             matched.clear();
-    //         }
-    //         count -= 1;
-    //     }
-    // }
-
-    // result
-
-    // second attempt
     let mut brace_count = 0;
     let mut in_brace_vec: Vec<String> = Vec::new();
     let mut not_in_brace_vec: Vec<String> = Vec::new();
     let mut result: Vec<String> = Vec::new();
+
+    let something: bool = if true {true} else {false};
 
     for string in vec {
         if string == "{" {
@@ -95,6 +77,30 @@ fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
     result
 }
 
+fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
+    let mut brace_count = 0;
+    let mut in_brace: bool;
+    let mut last_in_brace: bool = false;
+
+    let mut current_match: Vec<String> = Vec::new();
+    let mut result: Vec<String> = Vec::new();
+
+    for string in vec {
+        brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
+        in_brace = if brace_count > 0 { true } else { false };
+    
+        if in_brace != last_in_brace {
+            result.push(current_match.join(" "));
+            current_match.clear();
+        }
+    
+        current_match.push(string);
+        last_in_brace = in_brace;
+    };
+
+    result
+}
+
 
 pub fn main() {
     // let sample_file_path = Path::new("src/sample_files/first_example_file.fncy");
@@ -115,7 +121,9 @@ pub fn main() {
 
 
 fn testing_schtick(code: Vec<String>) {
-    let result = split_till_matching_brace(code);
+    let result_old = split_till_matching_brace(code.clone());
+    let result_new = split_till_matching_brace(code.clone());
 
-    println!("result: {:?}", result);
+    println!("result_old: {:?}", result_old);
+    println!("result_new: {:?}", result_new);
 }
