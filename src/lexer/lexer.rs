@@ -16,7 +16,8 @@ fn get_hash_map() -> HashMap<String, String> {
         ("fun", "fn"),
         ("print", "println!"),
 
-        (";", "")
+        (";", ""),
+        ("'", "\"")
     ]
     .into_iter()
     .map(|x| (String::from(x.0), String::from(x.1)))
@@ -41,6 +42,60 @@ fn rustify_code(code: &Vec<String>) -> Vec<String> {
     rustified_code
 }
 
+fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
+    // // first attempt
+    // let mut count = 0;
+    // let mut matched: Vec<String> = Vec::new();
+    // let mut result: Vec<String> = Vec::new();
+
+    // for string in vec {
+    //     if string == "{" {
+    //         count += 1;
+    //     } else if string == "}" {
+    //         if count == 1 {
+    //             result.push(matched.join(" "));
+    //             matched.clear();
+    //         }
+    //         count -= 1;
+    //     }
+    // }
+
+    // result
+
+    // second attempt
+    let mut brace_count = 0;
+    let mut in_brace_vec: Vec<String> = Vec::new();
+    let mut not_in_brace_vec: Vec<String> = Vec::new();
+    let mut result: Vec<String> = Vec::new();
+
+    for string in vec {
+        if string == "{" {
+                brace_count += 1;
+                in_brace_vec.push(string) // cuz brace_count will always be > 0;
+        } else if string == "}" {
+            brace_count -= 1;
+            if brace_count > 0 {
+                in_brace_vec.push(string);
+            } else {
+                in_brace_vec.push(string);
+                result.push(not_in_brace_vec.join(" "));
+                not_in_brace_vec.clear();
+                result.push(in_brace_vec.join(" "));
+                in_brace_vec.clear();
+            };
+        } else {
+            if brace_count > 0 {
+                in_brace_vec.push(string);
+            } else {
+                not_in_brace_vec.push(string);
+            }
+        }
+    };     //  always push to result?
+
+    result
+}
+
+
 pub fn main() {
     // let sample_file_path = Path::new("src/sample_files/first_example_file.fncy");
     // let (symbol_idx, text_chars) = preprocessing::get_symbol_idx_and_chars_from_file(sample_file_path);
@@ -49,9 +104,18 @@ pub fn main() {
 
     let rustified_code = rustify_code(&code);
 
-    println!("{:?}", rustified_code.join(" "));
+    println!("{:?}", code.join(" "));
+    // println!("{:?}", rustified_code.join(" "));
 
+    testing_schtick(code.clone());
 
     // tokenizer::main(&text_chars, &symbol_idx);
     // preprocessing::test_char_shenanigans(&text_chars, &symbol_idx);
+}
+
+
+fn testing_schtick(code: Vec<String>) {
+    let result = split_till_matching_brace(code);
+
+    println!("result: {:?}", result);
 }

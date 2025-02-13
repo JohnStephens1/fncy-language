@@ -1,4 +1,4 @@
-use std::{fs, path::Path};
+use std::{collections::HashMap, fs, path::Path};
 
 
 
@@ -28,9 +28,14 @@ fn read_file(path: &Path) -> String{
 fn normalize_whitespaces(chars: Vec<char>) -> Vec<char> {
     let mut prev_char_was_whitespace = false;
     let mut result: Vec<char> = Vec::new();
+    // println!("hello");
 
     for char in chars {
+        // if char == '\n' {
+        //     println!("newline {char}");
+        // }
         if char.is_whitespace() {
+            // if char.is_whitespace() && !(char == '\n') {
             if !prev_char_was_whitespace {
                 result.push(' ');
                 prev_char_was_whitespace = true;
@@ -74,11 +79,25 @@ fn update_string(original_string: String) -> String {
     let symbols = get_symbols();
     let mut string = original_string;
 
+    // let le_map: HashMap<String, String> = vec![
+    //     ("- >", "->"),
+    // ]
+    // .into_iter()
+    // .map(|x| (String::from(x.0), String::from(x.1)))
+    // .collect();
+
     for symbol in symbols {
+        println!("symbol: {symbol}");
+        if symbol == "->" { continue; }
         string = spacify_character(&string, &symbol);
     }
 
+    string = string.replace("-  >", "->");
+
     string = reduce_whitespaces_from_string(&string);
+
+    // let char_vec: Vec<char> = string.chars().collect();
+    // string = normalize_whitespaces(char_vec).into_iter().collect();
 
     string
 }
