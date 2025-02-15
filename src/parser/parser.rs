@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 
 use crate::lexer::{different_approach, lexer};
-use crate::util::processing;
+use crate::util::processing::{self, split_matching_parenthesis};
 // use crate::parser::types;
 
 
@@ -33,6 +33,15 @@ fn statement_handler(code: &Vec<String>) {
 }
 
 fn fun_def_handler(code: &Vec<String>) {
+    if code.first().expect("no fun indeed") == "fun" {};
+
+    let fun_name = code[1].clone();
+    let (parameters, remainder) = split_matching_parenthesis(&code[2..]);
+
+    let my_slice = code[0..2].to_vec();
+    dbg!(parameters);
+    dbg!(remainder);
+    dbg!(my_slice);
     println!("handling fun def")
 }
 
