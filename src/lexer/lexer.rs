@@ -44,39 +44,7 @@ fn rustify_code(code: &Vec<String>) -> Vec<String> {
     rustified_code
 }
 
-fn split_matching_braces_old(vec: Vec<String>) -> Vec<String> {
-    let mut brace_count = 0;
-    let mut in_brace_vec: Vec<String> = Vec::new();
-    let mut not_in_brace_vec: Vec<String> = Vec::new();
-    let mut result: Vec<String> = Vec::new();
-
-    for string in vec {
-        if string == "{" {
-                brace_count += 1;
-                in_brace_vec.push(string) // cuz brace_count will always be > 0;
-        } else if string == "}" {
-            brace_count -= 1;
-            in_brace_vec.push(string);
-            if brace_count <= 0 {
-                result.push(not_in_brace_vec.join(" "));
-                not_in_brace_vec.clear();
-                result.push(in_brace_vec.join(" "));
-                in_brace_vec.clear();
-            };
-        } else {
-            if brace_count > 0 {
-                in_brace_vec.push(string);
-            } else {
-                not_in_brace_vec.push(string);
-            }
-        }
-    };     //  always push to result?
-
-    result
-}
-
-// not actually working properly? not returning { ... } but { ...] [ } ...
-fn split_matching_braces_new(vec: Vec<String>) -> Vec<String> {
+fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
     let mut brace_count = 0;
     let mut in_brace: bool;
     let mut last_in_brace: bool = false;
@@ -88,16 +56,59 @@ fn split_matching_braces_new(vec: Vec<String>) -> Vec<String> {
         brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
         in_brace = if brace_count > 0 { true } else { false };
     
-        if in_brace != last_in_brace {
+        if last_in_brace == false && in_brace == true {
             result.push(current_match.join(" "));
             current_match.clear();
-        };
+            current_match.push(string);
+        } else if last_in_brace == true && in_brace == false {
+            current_match.push(string);
+            result.push(current_match.join(" "));
+            current_match.clear();
+        } else {
+            current_match.push(string);
+        }
 
-        current_match.push(string);
         last_in_brace = in_brace;
     };
 
     result
+}
+
+fn split_matching_braces_new(vec: &Vec<String>) -> Vec<String> {
+    let mut brace_count = 0;
+    let mut current_i = 0;
+    let mut in_brace: bool;
+    let mut last_in_brace: bool = false;
+
+    let mut current_match: Vec<String> = Vec::new();
+    let mut result: Vec<String> = Vec::new();
+
+    let mut matches: Vec<usize> = vec![0];
+
+    for string in vec {
+        current_i += 1;
+
+        brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
+        in_brace = if brace_count > 0 { true } else { false };
+
+        if in_brace != last_in_brace {
+            // result.push(current_match.join(" "));
+            // current_match.clear();
+            matches.push(current_i)
+        };
+
+        last_in_brace = in_brace;
+    };
+
+    let mut last_i: usize = 0;
+
+    // for i in matches[1..].into_iter() {
+    //     result.push(vec[last_i..i].to_vec());
+
+    //     last_i = i;
+    // }
+
+    vec[matches[0]..matches[1]].to_vec()
 }
 
 fn split_from_brace_to_next_match(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
@@ -136,7 +147,7 @@ pub fn main() {
 
     // println!("code: {:?}", code);
 
-    let (result_one, result_two) = split_from_brace_to_next_match(&code[13..].to_vec());
+    // let (result_one, result_two) = split_from_brace_to_next_match(&code[13..].to_vec());
 
     // println!("result_one: {:?}\n", result_one);
     // println!("result_two: {:?}\n", result_two);
@@ -152,10 +163,10 @@ pub fn main() {
 
 
 fn testing_schtick(code: Vec<String>) {
-    let result_old = split_matching_braces_old(code.clone());
-    let result_new = split_matching_braces_new(code.clone());
+    let result = split_matching_braces(code.clone());
+    let result_new = split_matching_braces_new(&code);
 
-    println!("result_old: {:?}", result_old);
+    println!("result_old: {:?}", result);
     println!("result_new: {:?}", result_new);
 }
 
