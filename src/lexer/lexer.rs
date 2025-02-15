@@ -48,18 +48,14 @@ fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
     let mut not_in_brace_vec: Vec<String> = Vec::new();
     let mut result: Vec<String> = Vec::new();
 
-    let something: bool = if true {true} else {false};
-
     for string in vec {
         if string == "{" {
                 brace_count += 1;
                 in_brace_vec.push(string) // cuz brace_count will always be > 0;
         } else if string == "}" {
             brace_count -= 1;
-            if brace_count > 0 {
-                in_brace_vec.push(string);
-            } else {
-                in_brace_vec.push(string);
+            in_brace_vec.push(string);
+            if brace_count <= 0 {
                 result.push(not_in_brace_vec.join(" "));
                 not_in_brace_vec.clear();
                 result.push(in_brace_vec.join(" "));
