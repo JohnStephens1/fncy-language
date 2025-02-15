@@ -74,42 +74,42 @@ fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
     result
 }
 
-fn split_matching_braces_new(vec: &Vec<String>) -> Vec<String> {
-    let mut brace_count = 0;
-    let mut current_i = 0;
-    let mut in_brace: bool;
-    let mut last_in_brace: bool = false;
+// // dubious xd
+// // also doesn't include { in match
+// fn split_matching_braces_new(vec: &Vec<String>) -> Vec<String> {
+//     let mut brace_count = 0;
+//     let mut current_i = 0;
+//     let mut in_brace: bool;
+//     let mut last_in_brace: bool = false;
 
-    let mut current_match: Vec<String> = Vec::new();
-    let mut result: Vec<String> = Vec::new();
+//     let mut result: Vec<String> = Vec::new();
 
-    let mut matches: Vec<usize> = vec![0];
+//     let mut matches: Vec<usize> = vec![0];
 
-    for string in vec {
-        current_i += 1;
+//     for string in vec {
+//         current_i += 1;
 
-        brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
-        in_brace = if brace_count > 0 { true } else { false };
+//         brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
+//         in_brace = if brace_count > 0 { true } else { false };
 
-        if in_brace != last_in_brace {
-            // result.push(current_match.join(" "));
-            // current_match.clear();
-            matches.push(current_i)
-        };
+//         if in_brace != last_in_brace {
+//             matches.push(current_i)
+//         };
 
-        last_in_brace = in_brace;
-    };
+//         last_in_brace = in_brace;
+//     };
+    
+//     if matches.len() > 1 {
+//         let mut last_i: usize = 0;
+    
+//         for i in matches[1..].iter().copied() {
+//             result.push(vec[last_i..i].to_vec().join(" "));
+//             last_i = i;
+//         }
+//     }
 
-    let mut last_i: usize = 0;
-
-    // for i in matches[1..].into_iter() {
-    //     result.push(vec[last_i..i].to_vec());
-
-    //     last_i = i;
-    // }
-
-    vec[matches[0]..matches[1]].to_vec()
-}
+//     result
+// }
 
 fn split_from_brace_to_next_match(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
     let mut brace_count = 0;
@@ -138,24 +138,7 @@ pub fn main() {
 
     let rustified_code = rustify_code(&code);
 
-    // println!("{:?}", code.join(" "));
-    // println!("{:?}", rustified_code.join(" "));
-
     testing_schtick(code.clone());
-    // println!("{:?}", &code[..10]);
-    // println!("{:?}", &code[0..1]);
-
-    // println!("code: {:?}", code);
-
-    // let (result_one, result_two) = split_from_brace_to_next_match(&code[13..].to_vec());
-
-    // println!("result_one: {:?}\n", result_one);
-    // println!("result_two: {:?}\n", result_two);
-
-    // println!("code: {:?}", code);
-
-    // test_for_single_match_thingy();
-    // the_simplest_things_aint_working_xd();
 
     // tokenizer::main(&text_chars, &symbol_idx);
     // preprocessing::test_char_shenanigans(&text_chars, &symbol_idx);
@@ -164,28 +147,6 @@ pub fn main() {
 
 fn testing_schtick(code: Vec<String>) {
     let result = split_matching_braces(code.clone());
-    let result_new = split_matching_braces_new(&code);
 
-    println!("result_old: {:?}", result);
-    println!("result_new: {:?}", result_new);
-}
-
-fn test_for_single_match_thingy() {
-    let sample_vec: Vec<String> = [
-        "fun multiply_two_numbers ( num_1 : int , num_2 : int ) -> int", "{ num_1 * num_2 ; }", "fun main ( )", "{ let number_1 : int = 15 let number_2 : int = 30 let result : vint = 0 let result = multiply_two_numbers ( number_1 , number_2 ) print ( f ' result : { result } ' ) }"
-        ].into_iter().map(String::from).collect();
-    
-
-    println!("sample_vec: {:?}\n", sample_vec);
-    split_from_brace_to_next_match(&sample_vec);
-
-    // println!("{:?}", result);
-}
-
-
-fn the_simplest_things_aint_working_xd() {
-    let simple_array = ["hello", "to", "you"];
-    let gud_string_vec: Vec<String> = simple_array.into_iter().map(String::from).collect();
-
-    println!("gud_string_vec: {:?}\n", gud_string_vec);
+    println!("result: {:?}", result);
 }
