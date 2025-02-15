@@ -74,43 +74,6 @@ fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
     result
 }
 
-// // dubious xd
-// // also doesn't include { in match
-// fn split_matching_braces_new(vec: &Vec<String>) -> Vec<String> {
-//     let mut brace_count = 0;
-//     let mut current_i = 0;
-//     let mut in_brace: bool;
-//     let mut last_in_brace: bool = false;
-
-//     let mut result: Vec<String> = Vec::new();
-
-//     let mut matches: Vec<usize> = vec![0];
-
-//     for string in vec {
-//         current_i += 1;
-
-//         brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
-//         in_brace = if brace_count > 0 { true } else { false };
-
-//         if in_brace != last_in_brace {
-//             matches.push(current_i)
-//         };
-
-//         last_in_brace = in_brace;
-//     };
-    
-//     if matches.len() > 1 {
-//         let mut last_i: usize = 0;
-    
-//         for i in matches[1..].iter().copied() {
-//             result.push(vec[last_i..i].to_vec().join(" "));
-//             last_i = i;
-//         }
-//     }
-
-//     result
-// }
-
 fn split_from_brace_to_next_match(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
     let mut brace_count = 0;
     let mut last_i = 0;
