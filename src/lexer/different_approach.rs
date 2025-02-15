@@ -104,7 +104,7 @@ fn update_string(original_string: String) -> String {
 
 
 pub fn main() -> String{
-    let sample_file_path = Path::new("src/sample_files/first_example_file.fncy");
+    let sample_file_path = Path::new("src/sample_files/second_example_file.fncy");
     let original_text: String = read_file(sample_file_path);
 
     let updated_text = update_string(original_text);

@@ -2,7 +2,8 @@ use std::collections::HashMap;
 
 use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
-// use crate::parser::types;
+use crate::parser::parser_util;
+use crate::parser::types;
 
 
 fn vec_gen_boi() -> Vec<String> {
@@ -28,8 +29,72 @@ fn get_matchers() -> HashMap<String, String> {
 }
 
 
-fn statement_handler(code: &Vec<String>) {
+fn expression_handler(code: &Vec<String>) {
 
+}
+
+
+fn get_parameter(name: String, type_fncy: String, default_value: String) -> types::Parameter {
+    let le_map = types::get_param_type_hashmap();
+    let type_rs = le_map.get(&type_fncy).unwrap().clone();
+
+    types::Parameter {
+        name,
+        type_fncy,
+        type_rs,
+        default_value
+    }
+}
+
+fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
+    let mut parameters: Vec<types::Parameter> = Vec::new();
+
+    let mut comma_index: Vec<usize> = Vec::new();
+    let mut colon_index: Vec<usize> = Vec::new();
+    let mut equals_index: Vec<usize> = Vec::new();
+
+    let mut default_value = "".to_string();
+
+    let mut i: usize = 0;
+    for string in params {
+        match string.as_str() {
+            "," => comma_index.push(i),
+            ":" => colon_index.push(i),
+            "=" => equals_index.push(i),
+            _ => {}
+        }
+
+        i += 1;
+    }
+
+    i = 0;
+    let mut i_equals: i32 = 0;
+    for colon_idx in &colon_index {
+        if let Some(equals_idx) = equals_index.get(i_equals as usize) {
+            if let Some(comma_idx) = comma_index.get(i) {
+                if comma_idx < equals_idx {
+                    // i_equals = if i_equals == 0 {0} else {i_equals - 1};
+                    i_equals -= 1;
+                } else {
+                    default_value = params[*equals_idx + 1..*comma_idx].join(" ");
+                }
+            } else {
+                default_value = params[*equals_idx + 1..].join(" ");
+            }
+        }
+
+        parameters.push(get_parameter(
+            params[colon_idx - 1].clone(),
+            params[colon_idx + 1].clone(),
+            default_value.clone()
+        ));
+
+        i_equals += 1;
+        i += 1;
+        default_value = "".to_string();
+    }
+
+    parameters
 }
 
 fn fun_def_handler(code: &Vec<String>) {
@@ -37,6 +102,9 @@ fn fun_def_handler(code: &Vec<String>) {
 
     let fun_name = code[1].clone();
     let (parameters, remainder) = split_matching_parenthesis(&code[2..]);
+    let fun_params = get_parameters(&parameters[1..&parameters.len()-1]); 
+
+    dbg!(fun_params);
 
     let my_slice = code[0..2].to_vec();
     dbg!(parameters);

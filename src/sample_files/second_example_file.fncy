@@ -1,0 +1,14 @@
+fun multiply_three_numbers(num_1: int = 5, num_2: int = 5 * 3, num_3: int = 2 / 2) -> int {
+	num_1*num_2*num_3;
+}
+
+
+fun main() {
+	let number_1: int = 15
+	let number_2: int = 30
+	let result: vint = 0
+
+	let result = multiply_two_numbers(number_1, number_2)
+
+	print(f'result: {result}')
+}

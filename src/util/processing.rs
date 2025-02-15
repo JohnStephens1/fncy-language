@@ -1,3 +1,4 @@
+// can consider changing output to slice as well
 pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -> (Vec<String>, Vec<String>) {
     let mut match_char_count: i32 = 0;
     let mut i: usize = 0;
@@ -30,6 +31,7 @@ pub fn split_matching_bracket(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "[", "]")
 }
 
+// don't work cuz closing boi == opening boi
 pub fn split_matching_quote(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "\"", "\"")
 }
