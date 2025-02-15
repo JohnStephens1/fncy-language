@@ -1,8 +1,10 @@
+use std::collections::btree_map::Range;
 use std::collections::HashMap;
 use std::fs;
 use std::fs::read_to_string;
 // use std::env;
 use std::path::Path;
+use std::result;
 use crate::lexer::preprocessing;
 use crate::lexer::tokenizer;
 
@@ -42,7 +44,7 @@ fn rustify_code(code: &Vec<String>) -> Vec<String> {
     rustified_code
 }
 
-fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
+fn split_matching_braces_old(vec: Vec<String>) -> Vec<String> {
     let mut brace_count = 0;
     let mut in_brace_vec: Vec<String> = Vec::new();
     let mut not_in_brace_vec: Vec<String> = Vec::new();
@@ -73,7 +75,8 @@ fn split_till_matching_brace(vec: Vec<String>) -> Vec<String>{
     result
 }
 
-fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
+// not actually working properly? not returning { ... } but { ...] [ } ...
+fn split_matching_braces_new(vec: Vec<String>) -> Vec<String> {
     let mut brace_count = 0;
     let mut in_brace: bool;
     let mut last_in_brace: bool = false;
@@ -88,13 +91,31 @@ fn split_matching_braces(vec: Vec<String>) -> Vec<String> {
         if in_brace != last_in_brace {
             result.push(current_match.join(" "));
             current_match.clear();
-        }
-    
+        };
+
         current_match.push(string);
         last_in_brace = in_brace;
     };
 
     result
+}
+
+fn split_from_brace_to_next_match(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
+    let mut brace_count = 0;
+    let mut last_i = 0;
+
+    for string in vec {
+        last_i += 1;
+        brace_count += if string == "{" {1} else if string == "}" {-1} else {0};
+
+        if brace_count == 0 {
+            break;
+        }
+    }
+
+    if last_i == 1 { println!("first input wasn't a brace!"); }
+
+    (vec[..last_i].to_vec(), vec[last_i..].to_vec())
 }
 
 
@@ -106,10 +127,24 @@ pub fn main() {
 
     let rustified_code = rustify_code(&code);
 
-    println!("{:?}", code.join(" "));
+    // println!("{:?}", code.join(" "));
     // println!("{:?}", rustified_code.join(" "));
 
     testing_schtick(code.clone());
+    // println!("{:?}", &code[..10]);
+    // println!("{:?}", &code[0..1]);
+
+    // println!("code: {:?}", code);
+
+    let (result_one, result_two) = split_from_brace_to_next_match(&code[13..].to_vec());
+
+    // println!("result_one: {:?}\n", result_one);
+    // println!("result_two: {:?}\n", result_two);
+
+    // println!("code: {:?}", code);
+
+    // test_for_single_match_thingy();
+    // the_simplest_things_aint_working_xd();
 
     // tokenizer::main(&text_chars, &symbol_idx);
     // preprocessing::test_char_shenanigans(&text_chars, &symbol_idx);
@@ -117,9 +152,29 @@ pub fn main() {
 
 
 fn testing_schtick(code: Vec<String>) {
-    let result_old = split_till_matching_brace(code.clone());
-    let result_new = split_till_matching_brace(code.clone());
+    let result_old = split_matching_braces_old(code.clone());
+    let result_new = split_matching_braces_new(code.clone());
 
     println!("result_old: {:?}", result_old);
     println!("result_new: {:?}", result_new);
+}
+
+fn test_for_single_match_thingy() {
+    let sample_vec: Vec<String> = [
+        "fun multiply_two_numbers ( num_1 : int , num_2 : int ) -> int", "{ num_1 * num_2 ; }", "fun main ( )", "{ let number_1 : int = 15 let number_2 : int = 30 let result : vint = 0 let result = multiply_two_numbers ( number_1 , number_2 ) print ( f ' result : { result } ' ) }"
+        ].into_iter().map(String::from).collect();
+    
+
+    println!("sample_vec: {:?}\n", sample_vec);
+    split_from_brace_to_next_match(&sample_vec);
+
+    // println!("{:?}", result);
+}
+
+
+fn the_simplest_things_aint_working_xd() {
+    let simple_array = ["hello", "to", "you"];
+    let gud_string_vec: Vec<String> = simple_array.into_iter().map(String::from).collect();
+
+    println!("gud_string_vec: {:?}\n", gud_string_vec);
 }

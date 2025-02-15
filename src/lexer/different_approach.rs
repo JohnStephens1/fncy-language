@@ -87,7 +87,7 @@ fn update_string(original_string: String) -> String {
     // .collect();
 
     for symbol in symbols {
-        println!("symbol: {symbol}");
+        // println!("symbol: {symbol}");
         if symbol == "->" { continue; }
         string = spacify_character(&string, &symbol);
     }
