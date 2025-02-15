@@ -30,7 +30,6 @@ pub fn split_matching_bracket(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
     split_matching_char(vec, "[", "]")
 }
 
-
 pub fn split_matching_quote(vec: &Vec<String>) -> (Vec<String>, Vec<String>) {
     split_matching_char(vec, "\"", "\"")
 }

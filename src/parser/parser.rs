@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 
-use crate::lexer::lexer;
+use crate::lexer::{different_approach, lexer};
 use crate::util::processing;
 // use crate::parser::types;
 
@@ -21,52 +21,60 @@ fn get_matchers() -> HashMap<String, String> {
 
         ("\"", "\""),
         ("'", "'"),
-    ];
-
-    
-    let test_string = "hello there \" im a potaootahr \"".to_string();
-    let le_map: HashMap<String, String> = vec![
-        ("\"", "HALLO"),
-        ("a", "AHHHHHH"),
-        ("\"", "QUOTIATIONN MERKK"),
     ]
     .into_iter()
     .map(|x| (String::from(x.0), String::from(x.1)))
-    .collect();
-
-    le_map
+    .collect()
 }
 
 
-fn statement_handler() {
+fn statement_handler(code: &Vec<String>) {
 
 }
 
-fn fun_def_handler() {
+fn fun_def_handler(code: &Vec<String>) {
+    println!("handling fun def")
+}
+
+fn fun_call_handler(code: &Vec<String>) {
 
 }
 
-fn fun_call_handler() {
+fn let_handler(code: &Vec<String>) {
 
 }
 
-fn let_handler() {
-
+fn analyze_code(code: &Vec<String>) {
+    for string in code.iter() {
+        match string.as_str() {
+            "fun" => fun_def_handler(code),
+            _ => println!("today i dont feel like doing aahnything")
+        }
+    }
 }
 
 
-fn run_parser() {
+fn run_parser(code: &Vec<String>) {
     get_matchers();
+
+    analyze_code(code);
 }
 
 
 pub fn main() {
-    run_parser();
+    let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
+    run_parser(&code);
+
+
     // println!("parser says hello");
+    // println!("code: {:?}", code);
 
     // test_map();
     test_char_split_boi();
 }
+
+
+
 
 
 fn test_map() {
