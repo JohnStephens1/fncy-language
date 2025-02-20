@@ -1,5 +1,5 @@
 // can consider changing output to slice as well
-pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -> (Vec<String>, Vec<String>) {
+pub fn get_i_of_next_matching_char(slice: &[String], start_char: &str, end_char: &str) -> usize{
     let mut match_char_count: i32 = 0;
     let mut i: usize = 0;
 
@@ -12,6 +12,12 @@ pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -
 
         if match_char_count == 0 { break; }
     }
+
+    i
+}
+
+pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -> (Vec<String>, Vec<String>) {
+    let i = get_i_of_next_matching_char(slice, start_char, end_char);
 
     let le_match = slice[0..i].to_vec();
     let remainder = slice[i..].to_vec();

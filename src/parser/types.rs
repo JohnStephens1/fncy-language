@@ -97,7 +97,8 @@ pub fn get_operator_list() -> Vec<String> {
     [
         "+", "-", "*", "/", "%",
         "<", ">", ":", "=", "==",
-        "&&", "and", "||", "or", "!", "not"
+        "&&", "and", "||", "or", "!", "not",
+        "."
     ]
     .into_iter()
     .map(String::from)
