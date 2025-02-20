@@ -73,7 +73,6 @@ fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
         if let Some(equals_idx) = equals_index.get(i_equals as usize) {
             if let Some(comma_idx) = comma_index.get(i) {
                 if comma_idx < equals_idx {
-                    // i_equals = if i_equals == 0 {0} else {i_equals - 1};
                     i_equals -= 1;
                 } else {
                     default_value = params[*equals_idx + 1..*comma_idx].join(" ");
@@ -125,7 +124,7 @@ fn analyze_code(code: &Vec<String>) {
     for string in code.iter() {
         match string.as_str() {
             "fun" => fun_def_handler(code),
-            _ => println!("today i dont feel like doing aahnything")
+            _ => {} // println!("today i dont feel like doing aahnything")
         }
     }
 }
@@ -140,19 +139,30 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
-    run_parser(&code);
+    // run_parser(&code);
 
 
     // println!("parser says hello");
     // println!("code: {:?}", code);
 
+    test_get_variable();
     // test_map();
-    test_char_split_boi();
+    // test_char_split_boi();
 }
 
 
 
 
+
+
+fn test_get_variable() {
+    let name = "isanem".to_string();
+    let type_fncy = "vstring".to_string();
+    let value = "hello there".to_string();
+    let my_var = types::get_variable(name, type_fncy, value);
+
+    dbg!(my_var);
+}
 
 fn test_map() {
     let le_map = get_matchers();
