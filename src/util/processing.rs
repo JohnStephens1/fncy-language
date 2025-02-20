@@ -31,6 +31,25 @@ pub fn split_matching_bracket(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "[", "]")
 }
 
+
+pub fn split_at_next_delim(slice: &[String], char: &str) -> (Vec<String>, Vec<String>) {
+    match slice.get(0) {
+        Some(s) => if s != char { println!("first char wasn't {}!!", &char) },
+        _ => println!("slice is empty!!")
+    }
+
+    let i = match slice[1..].iter().position(|s| s==char) {
+        Some(i) => i+2,
+        _ => 0
+    };
+
+
+    let le_match = slice[0..i].to_vec();
+    let remainder = slice[i..].to_vec();
+
+    (le_match, remainder)
+}
+
 // don't work cuz closing boi == opening boi
 pub fn split_matching_quote(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "\"", "\"")

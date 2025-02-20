@@ -28,9 +28,31 @@ fn get_matchers() -> HashMap<String, String> {
     .collect()
 }
 
+fn find_end_of_expression(code: &Vec<String>) {
+    let manual_i: usize = 0;
+
+    let braces = types::get_braces();
+    let string_delims = types::get_string_delims();
+    let operators = types::get_operator_list();
+
+    // code.iter().position(predicate);
+
+    for (i, string) in code.iter().enumerate() {
+        match string {
+            s if braces.contains(s) => {},
+            s if string_delims.contains(s) => {},
+            s if operators.contains(s) => {},
+            _ => {}
+        }
+    }
+}
+
 
 fn expression_handler(code: &Vec<String>) {
+    let operator_vec = types::get_operator_list();
 
+    for string in code.iter() {
+    }
 }
 
 
@@ -141,11 +163,11 @@ pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     // run_parser(&code);
 
-
     // println!("parser says hello");
     // println!("code: {:?}", code);
 
-    test_get_variable();
+    test_split_at_next_delim();
+    // test_get_variable();
     // test_map();
     // test_char_split_boi();
 }
@@ -154,6 +176,20 @@ pub fn main() {
 
 
 
+
+fn test_split_at_next_delim() {
+    let test_vec: Vec<String> = 
+    ["\"", "hello", "chikn", "mc", "nuggit", "\"", "hello", "two", "\"", "yuhs", "\"", "eh"]
+    // ["\"", "hello", "chikn", "mc", "nuggit", "\"", "hello", "two", "\"", "yuhs", "\"", "eh"]
+    .into_iter()
+    .map(String::from)
+    .collect();
+
+    let (le_match, remainder) = processing::split_at_next_delim(&test_vec, "\"");
+
+    dbg!(le_match);
+    dbg!(remainder);
+}
 
 fn test_get_variable() {
     let name = "isanem".to_string();
