@@ -38,7 +38,7 @@ pub fn split_matching_bracket(slice: &[String]) -> (Vec<String>, Vec<String>) {
 }
 
 
-pub fn split_at_next_delim(slice: &[String], char: &str) -> (Vec<String>, Vec<String>) {
+pub fn get_i_of_next_delim(slice: &[String], char: &str) -> usize {
     match slice.get(0) {
         Some(s) => if s != char { println!("first char wasn't {}!!", &char) },
         _ => println!("slice is empty!!")
@@ -48,6 +48,12 @@ pub fn split_at_next_delim(slice: &[String], char: &str) -> (Vec<String>, Vec<St
         Some(i) => i+2,
         _ => 0
     };
+
+    i
+}
+
+pub fn split_at_next_delim(slice: &[String], char: &str) -> (Vec<String>, Vec<String>) {
+    let i = get_i_of_next_delim(slice, char);
 
 
     let le_match = slice[0..i].to_vec();

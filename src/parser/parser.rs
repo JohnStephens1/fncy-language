@@ -46,13 +46,13 @@ fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
         match string {
             s if braces.contains(s) || string_delims.contains(s) => {
                 // skip to matching brace
-                processing::split_matching_char(&code[i..], s, matchers.get(s).unwrap());
+                processing::get_i_of_next_matching_char(&code[i..], s, matchers.get(s).unwrap());
 
                 was_last_operator = false;
             },
             s if string_delims.contains(s) => {
                 // skip to next quote
-                processing::split_at_next_delim(&code[i..], s);
+                processing::get_i_of_next_delim(&code[i..], s);
 
                 was_last_operator = false;
             }
@@ -194,10 +194,10 @@ pub fn main() {
     // println!("code: {:?}", code);
 
     // test_find_end_of_expression()
-    // test_split_at_next_delim();
+    test_split_at_next_delim();
     // test_get_variable();
     // test_map();
-    test_char_split_boi();
+    // test_char_split_boi();
 }
 
 
@@ -273,7 +273,7 @@ fn test_char_split_boi() {
     .into_iter()
     .map(String::from)
     .collect();
-    let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_char(&test_vec, "{", "}");
+    let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
     // let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
 
     println!("test_vec: {:?}", test_vec);
