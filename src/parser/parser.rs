@@ -28,48 +28,41 @@ fn get_matchers() -> HashMap<String, String> {
     .collect()
 }
 
-fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
-    let mut manual_i: usize = 0;
+fn get_i_of_end_of_expression(code: &Vec<String>) -> usize {
+    let mut i: usize = 0;
+    let mut was_last_operator = true;
 
     let matchers = get_matchers();
     let braces = types::get_braces();
     let string_delims = types::get_string_delims();
     let operators = types::get_operator_list();
 
-    let mut was_last_operator = true;
 
-    // code.iter().position(predicate);
-
-
-    // bit of a nasty solution xd just wanna see if it works
-    for (i, string) in code.iter().enumerate() {
-        match string {
+    for _ in 0..code.len() {
+        match &code[i] {
             s if braces.contains(s) || string_delims.contains(s) => {
-                // skip to matching brace
-                processing::get_i_of_next_matching_char(&code[i..], s, matchers.get(s).unwrap());
-
+                i += processing::get_i_of_next_matching_char(&code[i..], s, matchers.get(s).unwrap()) - 1;
                 was_last_operator = false;
             },
             s if string_delims.contains(s) => {
-                // skip to next quote
-                processing::get_i_of_next_delim(&code[i..], s);
-
+                i += processing::get_i_of_next_delim(&code[i..], s) - 1;
                 was_last_operator = false;
             }
-            s if operators.contains(s) => {
-                // expect not operator more or less
-                was_last_operator = true;
-            },
-            _ => {
-                if was_last_operator { was_last_operator = false } else { break }
-            }
+            s if operators.contains(s) => was_last_operator = true,
+            _ => if was_last_operator { was_last_operator = false } else { break }
         }
 
-        manual_i += 1;
+        i += 1;
     }
 
-    let le_match = code[0..manual_i].to_vec();
-    let remainder = code[manual_i..].to_vec();
+    i
+}
+
+fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
+    let i = get_i_of_end_of_expression(code);
+
+    let le_match = code[0..i].to_vec();
+    let remainder = code[i..].to_vec();
 
     (le_match, remainder)
 }
@@ -193,8 +186,8 @@ pub fn main() {
     // println!("parser says hello");
     // println!("code: {:?}", code);
 
-    // test_find_end_of_expression()
-    test_split_at_next_delim();
+    test_find_end_of_expression()
+    // test_split_at_next_delim();
     // test_get_variable();
     // test_map();
     // test_char_split_boi();
@@ -206,11 +199,15 @@ pub fn main() {
 
 
 fn test_find_end_of_expression() {
-    let test_vec: Vec<String> =
+    let test_vec_1: Vec<String> =
         "something . something ( hell hello hello ) . guten_tag shoulda_stopped_here hello ( )"
         .split_ascii_whitespace().into_iter().map(String::from).collect();
 
-    let (le_match, remainder) = find_end_of_expression(&test_vec);
+    let test_vec_2: Vec<String> =
+        "something something ( hell hello hello ) . guten_tag shoulda_stopped_here hello ( )"
+        .split_ascii_whitespace().into_iter().map(String::from).collect();
+
+    let (le_match, remainder) = find_end_of_expression(&test_vec_2);
 
     dbg!(le_match);
     dbg!(remainder);
