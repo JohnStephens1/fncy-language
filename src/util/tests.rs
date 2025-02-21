@@ -14,7 +14,22 @@ fn test_split_at_next_delim() {
     .into_iter().map(String::from).collect();
 
     let (le_match, remainder) = processing::split_at_next_delim(&test, "\"");
+    assert_eq!(le_match, test_expected_match);
+    assert_eq!(remainder, test_expected_remainder);
+}
 
+#[test]
+fn test_split_matching_brace() {
+    let test_vec: Vec<String> = "{ hello there { } potato potato ( ( ( ) ) ) ( hello ) { } } helooooooo mah nehme heff { } ( ) ) ) { { ("
+    .split_ascii_whitespace().into_iter().map(String::from).collect();
+
+    let test_expected_match: Vec<String> = "{ hello there { } potato potato ( ( ( ) ) ) ( hello ) { } }"
+    .split_ascii_whitespace().into_iter().map(String::from).collect();
+
+    let test_expected_remainder: Vec<String> = "helooooooo mah nehme heff { } ( ) ) ) { { ("
+    .split_ascii_whitespace().into_iter().map(String::from).collect();
+
+    let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
     assert_eq!(le_match, test_expected_match);
     assert_eq!(remainder, test_expected_remainder);
 }

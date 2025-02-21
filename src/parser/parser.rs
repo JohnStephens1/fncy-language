@@ -197,20 +197,6 @@ pub fn main() {
 
 
 
-fn test_split_at_next_delim() {
-    let test_vec: Vec<String> = 
-    ["\"", "hello", "chikn", "mc", "nuggit", "\"", "hello", "two", "\"", "yuhs", "\"", "eh"]
-    // ["\"", "hello", "chikn", "mc", "nuggit", "\"", "hello", "two", "\"", "yuhs", "\"", "eh"]
-    .into_iter()
-    .map(String::from)
-    .collect();
-
-    let (le_match, remainder) = processing::split_at_next_delim(&test_vec, "\"");
-
-    dbg!(le_match);
-    dbg!(remainder);
-}
-
 fn test_get_variable() {
     let name = "isanem".to_string();
     let type_fncy = "vstring".to_string();
@@ -236,29 +222,4 @@ fn test_map() {
 
     let result_str = result.join(" ");
     println!("result: {:?}", result_str);
-
-
-
-    // for string in code {
-    //     if let Some(value) = le_map.get(string) {
-    //         x.push(value.clone());
-    //     } else {
-    //         x.push(string.clone());
-    //     }
-    // }
-}
-
-
-fn test_char_split_boi() {
-    let test_vec: Vec<String> = "{ hello there { } potato potato ( ( ( ) ) ) ( hello ) { } } helooooooo mah nehme heff { } ( ) ) ) { { (".split_ascii_whitespace()
-    .into_iter()
-    .map(String::from)
-    .collect();
-    let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
-    // let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
-
-    println!("test_vec: {:?}", test_vec);
-    println!();
-    println!("match: {:?}", le_match);
-    println!("remainder: {:?}", remainder);
 }
