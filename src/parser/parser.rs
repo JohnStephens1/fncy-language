@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::str::Chars;
 
 use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
@@ -267,11 +268,10 @@ fn run_parser(code: &Vec<String>) {
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
-
+    // imatacompletefkinlossxd();
     // test_get_variable();
     // test_map();
 }
-
 
 
 

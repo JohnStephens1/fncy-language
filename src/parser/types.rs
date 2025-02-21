@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, result, string};
 
 
 #[derive(Debug)]
@@ -26,6 +26,106 @@ pub struct Variable {
     pub type_fncy: String,
     pub type_rs: String,
     pub value: String
+}
+
+pub fn split_fncy_type(string: &str) -> (String, String) {
+    let chars: Vec<char> = string.chars().collect();
+    let mut i = 0;
+
+    let mut prev: &[char] = &chars[0..0];
+    let mut le_type: &[char] = &chars[0..0];
+
+    let mut last_char: char = ' ';
+    while i < chars.len() {
+        if chars[i]=='v' && last_char!='v' {
+            last_char = chars[i];
+            i += 1;
+        } else if chars[i]=='&' {
+            last_char = chars[i];
+            i += 1;
+        } else {
+            prev=&chars[..i];
+            le_type=&chars[i..];
+            break
+        }
+    }
+
+    let prev_res = prev.iter().collect::<String>();
+    let le_type_res = le_type.iter().collect::<String>();
+
+    (prev_res, le_type_res)
+}
+
+
+fn check_chars(string: &String) -> bool {
+    let le_map: HashMap<String, String> = [
+        ("int", "i32"),
+        ("uint", "u32"),
+        ("usize", "usize"),
+        ("float", "f32"),
+        ("string", "String"),
+        ("&str", "&str"), // todo need to find a solution for u
+        ("char", "char"),
+    ]
+    .into_iter()
+    .map(|x| (String::from(x.0), String::from(x.1)))
+    .collect();
+
+    let mut le_result = "somethingv&int".to_string();
+    let mut le_type_fncy = "".to_string();
+
+    for (key, value) in le_map {
+        if let Some(pos) = le_result.find(&key) {
+            le_result = le_result.replacen(&key, "", 1);
+            le_type_fncy.push_str(&value);
+        }
+    }
+
+    dbg!(&le_result);
+    dbg!(&le_type_fncy);
+
+
+    let mut i = 0;
+
+    let mut chars: Vec<char> = Vec::new();
+    let mut last_char: char;
+
+    let mut ref_count: usize = 0;
+    let mut is_ref: bool = false; // actually pbb don't want this here
+    let mut is_var_ref: bool = false;
+    let mut is_var: bool = false;
+    let mut le_type: Vec<char> = Vec::new();
+
+    for char in string.chars().filter(|c| !c.is_whitespace()) {
+        match char {
+            s if s=='v' => {
+                if i == 0 {
+                    // nothing rly
+                } else {
+                    // if chars[i-1] == '&' && chars.get(i+1) != 'v'{
+                    //     is_var = true;
+                    // }
+                }
+            }, // mark v
+            s if s=='&' => {}, // mark &
+            _ => {} // mark type
+        };
+
+        chars.push(char);
+        i += 1;
+    };
+
+    let type_fncy: String = chars.into_iter().collect();
+    dbg!(&type_fncy);
+
+    true
+}
+
+fn lets_write_another_one_xd(type_fncy: &String) -> String {
+    let smth = type_fncy;
+
+
+    "".to_string()
 }
 
 // todo once types have properly crystallized implement remaining cases

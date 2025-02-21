@@ -46,3 +46,35 @@ fn test_translate_type_fncy_compact() {
     let results: Vec<String> = test_type_fncy.iter().map(types::translate_type_fncy_compact).collect();
     debug_assert_eq!(results, results_expected);
 }
+
+
+#[test]
+fn test_split_fncy_type() {
+    let test_strings: Vec<&str> = vec![
+        "v&&&vhello",
+        "&&&vhello",
+        "&&vhello",
+        "&vhello",
+        "vhello",
+        "v&vhello",
+        "&&&vvhello",
+        "v&vvvvvv",
+    ];
+
+    let results_expected: Vec<Vec<String>> = [
+        ["v&&&v", "hello"],
+        ["&&&v", "hello"],
+        ["&&v", "hello"],
+        ["&v", "hello"],
+        ["v", "hello"],
+        ["v&v", "hello"],
+        ["&&&v", "vhello"],
+        ["v&v", "vvvvv"],
+    ].into_iter().map(|x| x.into_iter().map(String::from).collect()).collect();
+
+    let results: Vec<Vec<String>> =
+    test_strings.iter().map(|x| types::split_fncy_type(*x))
+    .map(|x| vec![x.0, x.1]).collect();
+
+    assert_eq!(results, results_expected);
+}
