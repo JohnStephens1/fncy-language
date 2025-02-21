@@ -146,37 +146,6 @@ fn get_parameters(mut params: &[String]) -> Vec<types::Parameter> {
 }
 
 
-fn get_return_type(code: &Vec<String>) -> (String, String) {
-    if code.is_empty() {
-        ("".to_string(), "".to_string())
-    } else {
-        let return_type_fncy = code[1..].join(" ");
-        let (is_mutable, return_type_rs) = types::translate_type_fncy(&return_type_fncy);
-
-        (return_type_fncy, return_type_rs)
-    }
-}
-
-fn smth(a_string: & mut String) -> & mut String {
-    a_string
-
-}
-
-
-fn get_return_type_updated(code: &Vec<String>) -> String {
-    let smth = match code.first() {
-        Some(s) => code[1..].join(" "),
-        _ => "".to_string()
-    };
-
-    let smth = if code.is_empty() { "".to_string() } else { code[1..].join(" ") };
-
-    let pos_next_brace = code.iter().position(|s| s == "{").unwrap(); // should never panic
-    let return_type = code[1..pos_next_brace].join(" ");
-
-    return_type
-}
-
 fn get_fun(slice: &[String]) {
 
 }
@@ -235,9 +204,8 @@ fn analyze_code(code: &Vec<String>) {
 }
 
 fn run_parser(code: &Vec<String>) {
-    get_matchers();
+    // get_matchers();
 
-    // analyze_code(code);
     analyze_code(code);
 }
 
