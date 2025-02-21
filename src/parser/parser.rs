@@ -151,7 +151,7 @@ fn get_return_type(code: &Vec<String>) -> (String, String) {
     } else {
         let return_type_fncy = code[1..].join(" ");
         let (is_mutable, return_type_rs) = types::translate_type_fncy(&return_type_fncy);
-        
+
         (return_type_fncy, return_type_rs)
     }
 }
