@@ -25,16 +25,31 @@ pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -
     (le_match, remainder)
 }
 
+
 pub fn split_matching_brace(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "{", "}")
 }
+
+pub fn get_i_of_next_matching_brace(slice: &[String]) -> usize {
+    get_i_of_next_matching_char(slice, "{", "}")
+}
+
 
 pub fn split_matching_parenthesis(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "(", ")")
 }
 
+pub fn get_i_of_next_matching_parenthesis(slice: &[String]) -> usize {
+    get_i_of_next_matching_char(slice, "(", ")")
+}
+
+
 pub fn split_matching_bracket(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "[", "]")
+}
+
+pub fn get_i_of_next_matching_bracket(slice: &[String]) -> usize {
+    get_i_of_next_matching_char(slice, "[", "]")
 }
 
 

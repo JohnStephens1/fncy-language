@@ -170,6 +170,35 @@ fn fun_def_handler(code: &Vec<String>) -> types::Fun {
     }
 }
 
+fn get_fun(slice: &[String]) {
+
+}
+
+fn get_fun_i(slice: &[String]) {
+    // slice[];
+}
+
+fn fun_def_handler_iified(code: &Vec<String>) -> types::Fun {
+    println!("handling fun def");
+    if code.first().expect("no fun indeed") == "fun" {};
+
+    let fun_name = code[1].clone();
+
+    let (raw_params, remainder) = split_matching_parenthesis(&code[2..]);
+    let fun_params = get_parameters(&raw_params[1..&raw_params.len()-1]);
+
+    let (return_type, i) = get_return_type(&remainder);
+
+    let (code, remainder) = processing::split_matching_brace(&remainder[i..]);
+
+    types::Fun {
+        name: fun_name,
+        parameters: fun_params,
+        return_type,
+        code
+    }
+}
+
 fn fun_call_handler(code: &Vec<String>) {
 
 }
@@ -192,10 +221,28 @@ fn analyze_code(code: &Vec<String>) {
     }
 }
 
+fn analyze_code_iified(code: &Vec<String>) {
+    let mut i = 0;
+
+    for _ in 0..code.len() {
+        match code[i].as_str() {
+            "fun" => {
+                let my_fun = fun_def_handler_iified(code);
+
+                dbg!(&my_fun);
+            },
+            _ => {} // println!("today i dont feel like doing aahnything")
+        }
+
+        i += 1;
+    }
+}
+
 fn run_parser(code: &Vec<String>) {
     get_matchers();
 
-    analyze_code(code);
+    // analyze_code(code);
+    analyze_code_iified(code);
 }
 
 
