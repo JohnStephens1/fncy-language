@@ -181,7 +181,7 @@ fn get_fun(slice: &[String]) {
 
 }
 
-fn fun_def_handler(code: &Vec<String>) -> types::Fun {
+fn fun_def_handler(code: &[String]) -> (types::Fun, usize) {
     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
 
     let fun_name = code[1].clone();
@@ -197,12 +197,14 @@ fn fun_def_handler(code: &Vec<String>) -> types::Fun {
     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
     let fun_code = code[start_of_code..=end_of_code].to_vec();
 
-    types::Fun {
+    let my_fun = types::Fun {
         name: fun_name,
         parameters: fun_params,
         return_type,
         code: fun_code
-    }
+    };
+
+    (my_fun, end_of_code)
 }
 
 fn fun_call_handler(code: &Vec<String>) {
@@ -217,10 +219,11 @@ fn let_handler(code: &Vec<String>) {
 fn analyze_code(code: &Vec<String>) {
     let mut i = 0;
 
-    for _ in 0..code.len() {
+    while i < code.len() {
         match code[i].as_str() {
             "fun" => {
-                let my_fun = fun_def_handler(code);
+                let (my_fun, end) = fun_def_handler(&code[i..]);
+                i = end;
 
                 dbg!(&my_fun);
             },
