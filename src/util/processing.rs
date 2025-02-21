@@ -1,4 +1,3 @@
-// can consider changing output to slice as well
 pub fn get_i_of_next_matching_char(slice: &[String], start_char: &str, end_char: &str) -> usize{
     let mut match_char_count: i32 = 0;
     let mut i: usize = 0;
@@ -8,9 +7,10 @@ pub fn get_i_of_next_matching_char(slice: &[String], start_char: &str, end_char:
 
     for string in slice {
         match_char_count += if string == start_char {1} else if string == end_char {-1} else {0};
-        i += 1;
 
         if match_char_count == 0 { break; }
+
+        i += 1;
     }
 
     i
@@ -18,9 +18,7 @@ pub fn get_i_of_next_matching_char(slice: &[String], start_char: &str, end_char:
 
 pub fn split_matching_char(slice: &[String], start_char: &str, end_char: &str) -> (Vec<String>, Vec<String>) {
     let i = get_i_of_next_matching_char(slice, start_char, end_char);
-
-    let le_match = slice[0..i].to_vec();
-    let remainder = slice[i..].to_vec();
+    let (le_match, remainder) = get_match_and_remainder_from_i(slice, i);
 
     (le_match, remainder)
 }
@@ -60,7 +58,7 @@ pub fn get_i_of_next_delim(slice: &[String], char: &str) -> usize {
     }
 
     let i = match slice[1..].iter().position(|s| s==char) {
-        Some(i) => i+2,
+        Some(i) => i+1,
         _ => 0
     };
 
@@ -69,15 +67,22 @@ pub fn get_i_of_next_delim(slice: &[String], char: &str) -> usize {
 
 pub fn split_at_next_delim(slice: &[String], char: &str) -> (Vec<String>, Vec<String>) {
     let i = get_i_of_next_delim(slice, char);
-
-
-    let le_match = slice[0..i].to_vec();
-    let remainder = slice[i..].to_vec();
+    let (le_match, remainder) = get_match_and_remainder_from_i(slice, i);
 
     (le_match, remainder)
 }
 
-// don't work cuz closing boi == opening boi
 pub fn split_matching_quote(slice: &[String]) -> (Vec<String>, Vec<String>) {
     split_matching_char(slice, "\"", "\"")
+}
+
+
+pub fn get_match_and_remainder_from_i(slice: &[String], i: usize) -> (Vec<String>, Vec<String>) {
+    let le_match = slice[..=i].to_vec();
+    let remainder = match slice.get(i+1..) {
+        Some(s) => s.to_vec(),
+        _ => Vec::new()
+    };
+
+    (le_match, remainder)
 }

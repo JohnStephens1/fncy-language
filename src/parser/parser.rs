@@ -38,15 +38,17 @@ fn get_i_of_end_of_expression(code: &Vec<String>) -> usize {
     let string_delims = types::get_string_delims();
     let operators = types::get_operator_list();
 
-
+    // todo can theoretically go out of bounds, should test for that
+    // excplicit none test, safe indexing or while i < code.len
+    // last is best i think
     for _ in 0..code.len() {
         match &code[i] {
-            s if braces.contains(s) || string_delims.contains(s) => {
-                i += processing::get_i_of_next_matching_char(&code[i..], s, matchers.get(s).unwrap()) - 1;
+            s if braces.contains(s) => {
+                i += processing::get_i_of_next_matching_char(&code[i..], s, matchers.get(s).unwrap());
                 was_last_operator = false;
             },
             s if string_delims.contains(s) => {
-                i += processing::get_i_of_next_delim(&code[i..], s) - 1;
+                i += processing::get_i_of_next_delim(&code[i..], s);
                 was_last_operator = false;
             }
             s if operators.contains(s) => was_last_operator = true,
@@ -56,14 +58,13 @@ fn get_i_of_end_of_expression(code: &Vec<String>) -> usize {
         i += 1;
     }
 
-    i
+    i-1
 }
 
 pub fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
     let i = get_i_of_end_of_expression(code);
 
-    let le_match = code[0..i].to_vec();
-    let remainder = code[i..].to_vec();
+    let (le_match, remainder) = processing::get_match_and_remainder_from_i(code, i);
 
     (le_match, remainder)
 }
@@ -90,6 +91,9 @@ fn get_parameter(name: String, type_fncy: String, default_value: String) -> type
     }
 }
 
+// todo fix this xd
+// dear god what is this mess xd
+// takes ( ... ) but includes last ) in output
 fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
     let mut parameters: Vec<types::Parameter> = Vec::new();
 
@@ -148,54 +152,37 @@ fn get_return_type(code: &Vec<String>) -> (String, usize) {
     (return_type, pos_next_brace)
 }
 
-// todo change to index based analysis 4 per4mance
-fn fun_def_handler(code: &Vec<String>) -> types::Fun {
-    println!("handling fun def");
-    if code.first().expect("no fun indeed") == "fun" {};
-
-    let fun_name = code[1].clone();
-
-    let (raw_params, remainder) = split_matching_parenthesis(&code[2..]);
-    let fun_params = get_parameters(&raw_params[1..&raw_params.len()-1]);
-
-    let (return_type, i) = get_return_type(&remainder);
-
-    let (code, remainder) = processing::split_matching_brace(&remainder[i..]);
-
-    types::Fun {
-        name: fun_name,
-        parameters: fun_params,
-        return_type,
-        code
-    }
-}
-
 fn get_fun(slice: &[String]) {
 
 }
 
-fn get_fun_i(slice: &[String]) {
-    // slice[];
-}
-
-fn fun_def_handler_iified(code: &Vec<String>) -> types::Fun {
+fn fun_def_handler(code: &Vec<String>) -> types::Fun {
     println!("handling fun def");
-    if code.first().expect("no fun indeed") == "fun" {};
+    if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
+
 
     let fun_name = code[1].clone();
 
-    let (raw_params, remainder) = split_matching_parenthesis(&code[2..]);
-    let fun_params = get_parameters(&raw_params[1..&raw_params.len()-1]);
+    let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
+    let raw_params = &code[2..=end_of_params];
+    // end_of_params and raw_params are correct, outputting ( ... )
+    // todo fix get_parameters, includes final ) in output
+    let fun_params = get_parameters(raw_params);
 
-    let (return_type, i) = get_return_type(&remainder);
+    let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").unwrap(); // should never panic
+    // return type doesn't account for ->
+    // needs to handle lacking return type, fun name ( ... ) { ... }
+    let return_type = code[end_of_params+1..start_of_code].join(" ");
 
-    let (code, remainder) = processing::split_matching_brace(&remainder[i..]);
+    let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
+    let fun_code = code[start_of_code..=end_of_code].to_vec();
+
 
     types::Fun {
         name: fun_name,
         parameters: fun_params,
         return_type,
-        code
+        code: fun_code
     }
 }
 
@@ -207,27 +194,14 @@ fn let_handler(code: &Vec<String>) {
 
 }
 
-// todo change to i based indexing
+
 fn analyze_code(code: &Vec<String>) {
-    for string in code.iter() {
-        match string.as_str() {
-            "fun" => {
-                let my_fun = fun_def_handler(code);
-
-                dbg!(&my_fun);
-            },
-            _ => {} // println!("today i dont feel like doing aahnything")
-        }
-    }
-}
-
-fn analyze_code_iified(code: &Vec<String>) {
     let mut i = 0;
 
     for _ in 0..code.len() {
         match code[i].as_str() {
             "fun" => {
-                let my_fun = fun_def_handler_iified(code);
+                let my_fun = fun_def_handler(code);
 
                 dbg!(&my_fun);
             },
@@ -242,7 +216,7 @@ fn run_parser(code: &Vec<String>) {
     get_matchers();
 
     // analyze_code(code);
-    analyze_code_iified(code);
+    analyze_code(code);
 }
 
 
