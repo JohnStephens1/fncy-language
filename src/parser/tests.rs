@@ -59,6 +59,10 @@ fn test_split_fncy_type() {
         "v&vhello",
         "&&&vvhello",
         "v&vvvvvv",
+        "vvvvv",
+        "hellou",
+        "Vhello",
+        "v&Vhello"
     ];
 
     let results_expected: Vec<Vec<String>> = [
@@ -70,10 +74,13 @@ fn test_split_fncy_type() {
         ["v&v", "hello"],
         ["&&&v", "vhello"],
         ["v&v", "vvvvv"],
+        ["v", "vvvv"],
+        ["", "hellou"],
+        ["", "Vhello"],
+        ["v&", "Vhello"]
     ].into_iter().map(|x| x.into_iter().map(String::from).collect()).collect();
 
-    let results: Vec<Vec<String>> =
-    test_strings.iter().map(|x| types::split_fncy_type(*x))
+    let results: Vec<Vec<String>> = test_strings.iter().map(|x| types::split_fncy_type(*x))
     .map(|x| vec![x.0, x.1]).collect();
 
     assert_eq!(results, results_expected);
