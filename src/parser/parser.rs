@@ -145,11 +145,35 @@ fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
 }
 
 
-fn get_return_type(code: &Vec<String>) -> (String, usize) {
+fn get_return_type(code: &Vec<String>) -> (String, String) {
+    if code.is_empty() {
+        ("".to_string(), "".to_string())
+    } else {
+        let return_type_fncy = code[1..].join(" ");
+        let (is_mutable, return_type_rs) = types::translate_type_fncy(&return_type_fncy);
+        
+        (return_type_fncy, return_type_rs)
+    }
+}
+
+fn smth(a_string: & mut String) -> & mut String {
+    a_string
+
+}
+
+
+fn get_return_type_updated(code: &Vec<String>) -> String {
+    let smth = match code.first() {
+        Some(s) => code[1..].join(" "),
+        _ => "".to_string()
+    };
+
+    let smth = if code.is_empty() { "".to_string() } else { code[1..].join(" ") };
+
     let pos_next_brace = code.iter().position(|s| s == "{").unwrap(); // should never panic
     let return_type = code[1..pos_next_brace].join(" ");
 
-    (return_type, pos_next_brace)
+    return_type
 }
 
 fn get_fun(slice: &[String]) {
@@ -170,9 +194,29 @@ fn fun_def_handler(code: &Vec<String>) -> types::Fun {
     let fun_params = get_parameters(raw_params);
 
     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").unwrap(); // should never panic
+
+
+
+
+
     // return type doesn't account for ->
     // needs to handle lacking return type, fun name ( ... ) { ... }
-    let return_type = code[end_of_params+1..start_of_code].join(" ");
+    // let return_type = code[end_of_params+1..start_of_code].join(" ");
+    let raw_return_type = &code[end_of_params+1..start_of_code];
+    let return_type = if raw_return_type.is_empty() { "".to_string() } else { raw_return_type[1..].join(" ") };
+    dbg!(&return_type);
+
+
+
+
+
+    //testing
+    let test_input: Vec<String> = ["{", "anything", "tbh", "}"].into_iter().map(String::from).collect();
+    let test_pos_output = test_input.iter().position(|s| s == "{").unwrap();
+    let test_result = test_input[..test_pos_output].join(" ");
+    let test_result = test_input[..test_pos_output].is_empty();
+    dbg!(test_result);
+    //testing
 
     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
     let fun_code = code[start_of_code..=end_of_code].to_vec();

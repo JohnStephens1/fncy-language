@@ -28,7 +28,13 @@ pub struct Variable {
     pub value: String
 }
 
-fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
+
+
+// pub fn translate_type_fncy_compact(type_fncy: &String) -> String {
+
+// }
+
+pub fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
     let le_map = get_param_type_hashmap();
 
     let type_rs_original = match le_map.get(type_fncy) {
