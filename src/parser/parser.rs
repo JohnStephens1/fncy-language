@@ -182,46 +182,20 @@ fn get_fun(slice: &[String]) {
 }
 
 fn fun_def_handler(code: &Vec<String>) -> types::Fun {
-    println!("handling fun def");
     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
-
 
     let fun_name = code[1].clone();
 
     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
     let raw_params = &code[2..=end_of_params];
-    // end_of_params and raw_params are correct, outputting ( ... )
-    // todo fix get_parameters, includes final ) in output
     let fun_params = get_parameters(raw_params);
 
-    let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").unwrap(); // should never panic
-
-
-
-
-
-    // return type doesn't account for ->
-    // needs to handle lacking return type, fun name ( ... ) { ... }
-    // let return_type = code[end_of_params+1..start_of_code].join(" ");
+    let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
     let raw_return_type = &code[end_of_params+1..start_of_code];
     let return_type = if raw_return_type.is_empty() { "".to_string() } else { raw_return_type[1..].join(" ") };
-    dbg!(&return_type);
-
-
-
-
-
-    //testing
-    let test_input: Vec<String> = ["{", "anything", "tbh", "}"].into_iter().map(String::from).collect();
-    let test_pos_output = test_input.iter().position(|s| s == "{").unwrap();
-    let test_result = test_input[..test_pos_output].join(" ");
-    let test_result = test_input[..test_pos_output].is_empty();
-    dbg!(test_result);
-    //testing
 
     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
     let fun_code = code[start_of_code..=end_of_code].to_vec();
-
 
     types::Fun {
         name: fun_name,
