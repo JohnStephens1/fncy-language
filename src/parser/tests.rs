@@ -85,3 +85,36 @@ fn test_split_fncy_type() {
 
     assert_eq!(results, results_expected);
 }
+
+#[test]
+pub fn test_extract_var_info() {
+    use types::VarInfo;
+
+    let test_strings: Vec<&str> = vec![
+        "v&&&vhello",
+        "&vhello",
+        "vhello",
+        "v&vhello",
+        "&&&vvhello",
+        "vvvvv",
+        "hellou",
+        "Vhello",
+        "v&Vhello"
+    ];
+
+    let expected_results: Vec<VarInfo> = vec![
+        VarInfo { ref_count: 3, is_ref: true, is_var_ref: true, is_var: true, le_type: "hello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: false, is_var: true, le_type: "hello".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, le_type: "hello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: true, le_type: "hello".to_string(), },
+        VarInfo { ref_count: 3, is_ref: true, is_var_ref: false, is_var: true, le_type: "vhello".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, le_type: "vvvv".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, le_type: "hellou".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, le_type: "Vhello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: false, le_type: "Vhello".to_string() }
+    ];
+
+    // needs correct type
+    let results: Vec<VarInfo> = test_strings.iter().map(|x| types::extract_var_info(&x.to_string())).collect();
+    assert_eq!(expected_results, results);
+}

@@ -57,6 +57,7 @@ pub fn split_fncy_type(string: &str) -> (String, String) {
 }
 
 
+// dear god what have i done xd
 fn check_chars(string: &String) -> bool {
     let le_map: HashMap<String, String> = [
         ("int", "i32"),
@@ -121,12 +122,56 @@ fn check_chars(string: &String) -> bool {
     true
 }
 
-fn lets_write_another_one_xd(type_fncy: &String) -> String {
-    let smth = type_fncy;
 
 
-    "".to_string()
+
+// such friggin chaos xd my god
+pub fn extract_var_info(type_fncy: &String) -> VarInfo {
+    let (prev, le_type) = split_fncy_type(type_fncy);
+
+    let ref_count: usize = prev.matches("&").count();
+    let is_ref: bool = if ref_count > 0 { true } else { false };
+    let is_var_ref: bool = if prev.matches("v&").count() > 0 { true } else { false };
+    let is_var: bool = if prev.ends_with("v") { true } else { false };
+    let le_type = le_type;
+
+
+    // dbg!(&ref_count);
+    // dbg!(&is_ref);
+    // dbg!(&is_var_ref);
+    // dbg!(&is_var);
+    // dbg!(&le_type);
+
+    // dbg!((
+    //     ref_count,
+    //     is_ref,
+    //     is_var_ref,
+    //     is_var,
+    //     le_type,
+    // ));
+
+
+    VarInfo {
+        ref_count,
+        is_ref,
+        is_var_ref,
+        is_var,
+        le_type,
+    }
 }
+
+
+#[derive(Debug, PartialEq)]
+pub struct VarInfo {
+    pub ref_count: usize,
+    pub is_ref: bool,
+    pub is_var_ref: bool,
+    pub is_var: bool,
+    pub le_type: String,
+}
+
+
+
 
 // todo once types have properly crystallized implement remaining cases
 // limited to the more usual cases 4 now
