@@ -92,10 +92,10 @@ fn get_parameter(name: String, type_fncy: String, default_value: String) -> type
     }
 }
 
-// todo fix this xd
-// dear god what is this mess xd
-// takes ( ... ) but includes last ) in output
-fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
+// todo fixed, but still hideous xd feel free to update
+fn get_parameters(mut params: &[String]) -> Vec<types::Parameter> {
+    params = &params[1..params.len() - 1];
+
     let mut parameters: Vec<types::Parameter> = Vec::new();
 
     let mut comma_index: Vec<usize> = Vec::new();
