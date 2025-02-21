@@ -8,7 +8,7 @@ fun main() {
 	let number_2: int = 30
 	let result: vint = 0
 
-	let result = multiply_two_numbers(number_1, number_2)
+	result = multiply_two_numbers(number_1, number_2)
 
-	print(f'result: {result}')
+	print(f"result: {result}")
 }

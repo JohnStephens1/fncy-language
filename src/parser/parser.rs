@@ -267,7 +267,7 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
-    // run_parser(&code);
+    run_parser(&code);
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();
     // test_get_variable();
