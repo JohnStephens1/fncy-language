@@ -5,7 +5,6 @@
 )]
 // #![allow(unused_imports)]
 
-mod config;
 mod lexer;
 mod parser;
 mod util;
@@ -14,7 +13,8 @@ mod util;
 fn main() {
     // println!("main");
     // config::print_config();
-    lexer::lexer::main();
+    // lexer::lexer::main();
     parser::parser::main();
+    // parser::tests::main();
     // util::types::main();
 }

@@ -12,7 +12,6 @@ pub struct Parameter {
 
 pub struct Fun {
     name: String,
-
 }
 
 #[derive(Debug)]

@@ -2,8 +2,9 @@ use std::collections::HashMap;
 
 use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
-use crate::parser::parser_util;
-use crate::parser::types;
+
+use super::parser_util;
+use super::types;
 
 
 fn vec_gen_boi() -> Vec<String> {
@@ -58,7 +59,7 @@ fn get_i_of_end_of_expression(code: &Vec<String>) -> usize {
     i
 }
 
-fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
+pub fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) {
     let i = get_i_of_end_of_expression(code);
 
     let le_match = code[0..i].to_vec();
@@ -181,12 +182,11 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
-    // run_parser(&code);
+    run_parser(&code);
 
     // println!("parser says hello");
     // println!("code: {:?}", code);
 
-    test_find_end_of_expression()
     // test_split_at_next_delim();
     // test_get_variable();
     // test_map();
@@ -196,22 +196,6 @@ pub fn main() {
 
 
 
-
-
-fn test_find_end_of_expression() {
-    let test_vec_1: Vec<String> =
-        "something . something ( hell hello hello ) . guten_tag shoulda_stopped_here hello ( )"
-        .split_ascii_whitespace().into_iter().map(String::from).collect();
-
-    let test_vec_2: Vec<String> =
-        "something something ( hell hello hello ) . guten_tag shoulda_stopped_here hello ( )"
-        .split_ascii_whitespace().into_iter().map(String::from).collect();
-
-    let (le_match, remainder) = find_end_of_expression(&test_vec_2);
-
-    dbg!(le_match);
-    dbg!(remainder);
-}
 
 fn test_split_at_next_delim() {
     let test_vec: Vec<String> = 
