@@ -11,7 +11,9 @@ pub struct Parameter {
 }
 
 pub struct Fun {
-    name: String,
+    pub name: String,
+    pub parameters: Vec<Parameter>,
+    pub code: Vec<String>
 }
 
 #[derive(Debug)]
@@ -24,11 +26,11 @@ pub struct Variable {
     pub value: String
 }
 
-pub fn get_variable(name: String, type_fncy: String, value: String) -> Variable {
+fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
     let le_map = get_param_type_hashmap();
     // let type_rs = le_map.get(&type_fncy).unwrap().clone();
 
-    let type_rs_original = match le_map.get(&type_fncy) {
+    let type_rs_original = match le_map.get(type_fncy) {
         Some(s) => s.clone(),
         _ => {
             println!("didn't get a proper type!");
@@ -47,6 +49,12 @@ pub fn get_variable(name: String, type_fncy: String, value: String) -> Variable 
         .last()
         .unwrap_or_else(|| &"")
         .to_string();
+
+    (is_mutable, type_rs)
+}
+
+pub fn get_variable(name: String, type_fncy: String, value: String) -> Variable {
+    let (is_mutable, type_rs) = translate_type_fncy(&type_fncy);
 
     Variable {
         name,

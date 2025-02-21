@@ -172,7 +172,6 @@ fn analyze_code(code: &Vec<String>) {
     }
 }
 
-
 fn run_parser(code: &Vec<String>) {
     get_matchers();
 
@@ -184,13 +183,8 @@ pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
 
-    // println!("parser says hello");
-    // println!("code: {:?}", code);
-
-    // test_split_at_next_delim();
     // test_get_variable();
     // test_map();
-    // test_char_split_boi();
 }
 
 
