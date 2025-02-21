@@ -10,9 +10,11 @@ pub struct Parameter {
     pub default_value: String
 }
 
+#[derive(Debug)]
 pub struct Fun {
     pub name: String,
     pub parameters: Vec<Parameter>,
+    pub return_type: String,
     pub code: Vec<String>
 }
 
@@ -28,7 +30,6 @@ pub struct Variable {
 
 fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
     let le_map = get_param_type_hashmap();
-    // let type_rs = le_map.get(&type_fncy).unwrap().clone();
 
     let type_rs_original = match le_map.get(type_fncy) {
         Some(s) => s.clone(),

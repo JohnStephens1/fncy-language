@@ -77,6 +77,7 @@ fn expression_handler(code: &Vec<String>) {
 }
 
 
+// todo implement translate_type_fncy
 fn get_parameter(name: String, type_fncy: String, default_value: String) -> types::Parameter {
     let le_map = types::get_param_type_hashmap();
     let type_rs = le_map.get(&type_fncy).unwrap().clone();
@@ -139,20 +140,34 @@ fn get_parameters(params: &[String]) -> Vec<types::Parameter> {
     parameters
 }
 
-fn fun_def_handler(code: &Vec<String>) {
+
+fn get_return_type(code: &Vec<String>) -> (String, usize) {
+    let pos_next_brace = code.iter().position(|s| s == "{").unwrap(); // should never panic
+    let return_type = code[1..pos_next_brace].join(" ");
+
+    (return_type, pos_next_brace)
+}
+
+// todo change to index based analysis 4 per4mance
+fn fun_def_handler(code: &Vec<String>) -> types::Fun {
+    println!("handling fun def");
     if code.first().expect("no fun indeed") == "fun" {};
 
     let fun_name = code[1].clone();
-    let (parameters, remainder) = split_matching_parenthesis(&code[2..]);
-    let fun_params = get_parameters(&parameters[1..&parameters.len()-1]); 
 
-    dbg!(fun_params);
+    let (raw_params, remainder) = split_matching_parenthesis(&code[2..]);
+    let fun_params = get_parameters(&raw_params[1..&raw_params.len()-1]);
 
-    let my_slice = code[0..2].to_vec();
-    dbg!(parameters);
-    dbg!(remainder);
-    dbg!(my_slice);
-    println!("handling fun def")
+    let (return_type, i) = get_return_type(&remainder);
+
+    let (code, remainder) = processing::split_matching_brace(&remainder[i..]);
+
+    types::Fun {
+        name: fun_name,
+        parameters: fun_params,
+        return_type,
+        code
+    }
 }
 
 fn fun_call_handler(code: &Vec<String>) {
@@ -163,10 +178,15 @@ fn let_handler(code: &Vec<String>) {
 
 }
 
+// todo change to i based indexing
 fn analyze_code(code: &Vec<String>) {
     for string in code.iter() {
         match string.as_str() {
-            "fun" => fun_def_handler(code),
+            "fun" => {
+                let my_fun = fun_def_handler(code);
+
+                dbg!(&my_fun);
+            },
             _ => {} // println!("today i dont feel like doing aahnything")
         }
     }
