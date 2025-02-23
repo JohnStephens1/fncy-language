@@ -79,39 +79,39 @@ fn update_string(original_string: String) -> String {
     let symbols = get_symbols();
     let mut string = original_string;
 
-    // let le_map: HashMap<String, String> = vec![
-    //     ("- >", "->"),
-    // ]
-    // .into_iter()
-    // .map(|x| (String::from(x.0), String::from(x.1)))
-    // .collect();
-
     for symbol in symbols {
-        // println!("symbol: {symbol}");
         if symbol == "->" { continue; }
         string = spacify_character(&string, &symbol);
     }
 
     string = string.replace("-  >", "->");
-
     string = reduce_whitespaces_from_string(&string);
 
-    // let char_vec: Vec<char> = string.chars().collect();
-    // string = normalize_whitespaces(char_vec).into_iter().collect();
-
     string
+}
+
+
+// gruesome xd
+fn reduce_whitespace_retain_newlines(mut string: String) -> String {
+    if !string.is_ascii() {
+        string = string.chars().filter(|c| c.is_ascii()).collect();
+    }
+    
+    string.chars().flat_map(|c| {
+            if c.is_whitespace() && c != '\n' { ' ' } else { c };
+            if c.is_alphanumeric() || c == '_' { vec![c] } else { vec![' ', c, ' '] }
+        })
+        .collect::<String>()
+        .split(|x: char| x.is_whitespace() && x != '\n')
+        .filter(|x| !x.is_empty())
+        .map(String::from).collect::<Vec<String>>().join(" ")
 }
 
 
 pub fn main() -> String{
     let sample_file_path = Path::new("src/sample_files/second_example_file.fncy");
     let original_text: String = read_file(sample_file_path);
-
     let updated_text = update_string(original_text);
 
-    // println!("updated_text: {updated_text}");
-
     updated_text
-
-    // let split_boi: Vec<String> = trimmed_text.split_inclusive("(").map(String::from).collect();
 }

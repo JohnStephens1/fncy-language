@@ -207,18 +207,23 @@ pub fn let_handler(code: &[String]) -> (types::Variable, usize) {
 
 fn analyze_code(code: &Vec<String>) {
     let mut i = 0;
+    let mut start;
+    let mut fun_start_end: Vec<(usize, usize)> = Vec::new();
 
     // too much infinity, definitely need find a better solution
     // rn only reads the functions
     while i < code.len() {
-        print!("e_i: {}  ", i);
         match code[i].as_str() {
             "fun" => {
+                start = i;
                 let (my_fun, end) = fun_def_handler(&code[i..]);
+                fun_start_end.push((start, end));
                 i += end;
             },
             "let" => {
+                start = i;
                 let (my_var, end) = let_handler(&code[i..]);
+                fun_start_end.push((start, end));
                 i += end;
             },
             _ => {} // println!("today i dont feel like doing aahnything")
@@ -226,6 +231,11 @@ fn analyze_code(code: &Vec<String>) {
 
         i += 1;
     }
+}
+
+
+fn analyze_code_posified(code: &Vec<String>) {
+    // code.iter().position(predicate)
 }
 
 fn run_parser(code: &Vec<String>) {
