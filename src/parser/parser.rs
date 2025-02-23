@@ -240,7 +240,7 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
-    // run_parser(&code);
+    run_parser(&code);
 
     // test_let_handler();
     // types::test_extract_var_info();

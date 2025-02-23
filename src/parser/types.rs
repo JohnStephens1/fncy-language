@@ -56,76 +56,6 @@ pub fn split_fncy_type(string: &str) -> (String, String) {
     (prev_res, le_type_res)
 }
 
-
-// dear god what have i done xd
-fn check_chars(string: &String) -> bool {
-    let le_map: HashMap<String, String> = [
-        ("int", "i32"),
-        ("uint", "u32"),
-        ("usize", "usize"),
-        ("float", "f32"),
-        ("string", "String"),
-        ("&str", "&str"), // todo need to find a solution for u
-        ("char", "char"),
-    ]
-    .into_iter()
-    .map(|x| (String::from(x.0), String::from(x.1)))
-    .collect();
-
-    let mut le_result = "somethingv&int".to_string();
-    let mut le_type_fncy = "".to_string();
-
-    for (key, value) in le_map {
-        if let Some(pos) = le_result.find(&key) {
-            le_result = le_result.replacen(&key, "", 1);
-            le_type_fncy.push_str(&value);
-        }
-    }
-
-    dbg!(&le_result);
-    dbg!(&le_type_fncy);
-
-
-    let mut i = 0;
-
-    let mut chars: Vec<char> = Vec::new();
-    let mut last_char: char;
-
-    let mut ref_count: usize = 0;
-    let mut is_ref: bool = false; // actually pbb don't want this here
-    let mut is_var_ref: bool = false;
-    let mut is_var: bool = false;
-    let mut le_type: Vec<char> = Vec::new();
-
-    for char in string.chars().filter(|c| !c.is_whitespace()) {
-        match char {
-            s if s=='v' => {
-                if i == 0 {
-                    // nothing rly
-                } else {
-                    // if chars[i-1] == '&' && chars.get(i+1) != 'v'{
-                    //     is_var = true;
-                    // }
-                }
-            }, // mark v
-            s if s=='&' => {}, // mark &
-            _ => {} // mark type
-        };
-
-        chars.push(char);
-        i += 1;
-    };
-
-    let type_fncy: String = chars.into_iter().collect();
-    dbg!(&type_fncy);
-
-    true
-}
-
-
-
-
-// such friggin chaos xd my god
 pub fn extract_var_info(type_fncy: &String) -> VarInfo {
     let (prev, le_type) = split_fncy_type(type_fncy);
 
@@ -135,21 +65,13 @@ pub fn extract_var_info(type_fncy: &String) -> VarInfo {
     let is_var: bool = if prev.ends_with("v") { true } else { false };
     let le_type = le_type;
 
-
-    // dbg!(&ref_count);
-    // dbg!(&is_ref);
-    // dbg!(&is_var_ref);
-    // dbg!(&is_var);
-    // dbg!(&le_type);
-
     // dbg!((
-    //     ref_count,
-    //     is_ref,
-    //     is_var_ref,
-    //     is_var,
-    //     le_type,
+    //     &ref_count,
+    //     &is_ref,
+    //     &is_var_ref,
+    //     &is_var,
+    //     &le_type,
     // ));
-
 
     VarInfo {
         ref_count,
@@ -169,8 +91,6 @@ pub struct VarInfo {
     pub is_var: bool,
     pub le_type: String,
 }
-
-
 
 
 // todo once types have properly crystallized implement remaining cases
@@ -268,7 +188,6 @@ pub fn get_param_type_hashmap() -> HashMap<String, String> {
     .map(|x| (String::from(x.0), String::from(x.1)))
     .collect()
 }
-
 
 pub fn get_braces() -> Vec<String> {
     [
