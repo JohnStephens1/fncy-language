@@ -68,6 +68,7 @@ fn get_parameters(mut params: &[String]) -> Vec<Var> {
 fn get_parameters_new(mut slice: &[String]) -> Vec<Var> {
     slice = &slice[1..slice.len() - 1];
     let i: usize = 0;
+    
     let mut params: Vec<Var> = Vec::new();
     let mut expression: Vec<String> = Vec::new();
     let mut name: String = "".to_string();
@@ -101,7 +102,7 @@ fn get_parameters_new(mut slice: &[String]) -> Vec<Var> {
                 if !&name.is_empty() && !type_fncy.is_empty() {
                     if expression.is_empty() { expression.push("".to_string()); }
 
-                    Var::new(name.clone(), type_fncy.join(" "), expression.clone());
+                    params.push(Var::new(name.clone(), type_fncy.join(" "), expression.clone()));
                 }
 
                 name = "".to_string();
