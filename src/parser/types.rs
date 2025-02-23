@@ -18,14 +18,14 @@ pub struct Fun {
     pub code: Vec<String>
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Variable {
     // add references
     pub name: String,
     pub is_mutable: bool,
     pub type_fncy: String,
     pub type_rs: String,
-    pub value: String
+    pub value: Vec<String>
 }
 
 pub fn split_fncy_type(string: &str) -> (String, String) {
@@ -237,7 +237,7 @@ pub fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
     (is_mutable, type_rs)
 }
 
-pub fn get_variable(name: String, type_fncy: String, value: String) -> Variable {
+pub fn get_variable(name: String, type_fncy: String, value: Vec<String>) -> Variable {
     let (is_mutable, type_rs) = translate_type_fncy(&type_fncy);
 
     Variable {

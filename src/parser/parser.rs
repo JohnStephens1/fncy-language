@@ -5,7 +5,7 @@ use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
 
 use super::parser_util;
-use super::types;
+use super::types::{self, get_variable};
 
 
 fn vec_gen_boi() -> Vec<String> {
@@ -30,7 +30,7 @@ fn get_matchers() -> HashMap<String, String> {
     .collect()
 }
 
-fn get_i_of_end_of_expression(code: &Vec<String>) -> usize {
+fn get_i_of_end_of_expression(code: &[String]) -> usize {
     let mut i: usize = 0;
     let mut was_last_operator = true;
 
@@ -180,8 +180,35 @@ fn fun_call_handler(code: &Vec<String>) {
 
 }
 
-fn let_handler(code: &Vec<String>) {
+pub fn let_handler(code: &[String]) -> types::Variable {
+    if code.first().expect("received empty string") != "let" { panic!("no let") };
 
+    // cases
+    // let name : type = exp
+    // let name : type -> let name : < type >
+
+    let i: usize = 0;
+
+    let var_name = code[1].clone();
+
+
+
+    // remaining:
+    // case equals:
+    // : type = exp
+    let equals_pos = code.iter().position(|s| s=="=").expect("no equals");
+    let le_type = code[3..equals_pos].join(" ");
+
+    let exp_end_i = get_i_of_end_of_expression(&code[equals_pos+1..]) + equals_pos+1;
+    let exp = code[equals_pos+1..=exp_end_i].to_vec();
+    // case only_type:
+    // : type -> : < type >
+
+    get_variable(
+        var_name,
+        le_type,
+        exp
+    )
 }
 
 
@@ -196,6 +223,7 @@ fn analyze_code(code: &Vec<String>) {
 
                 dbg!(&my_fun);
             },
+            "let" => {let_handler(&code[i..]);},
             _ => {} // println!("today i dont feel like doing aahnything")
         }
 
@@ -212,7 +240,9 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
-    run_parser(&code);
+    // run_parser(&code);
+
+    // test_let_handler();
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();
     // test_get_variable();
@@ -220,12 +250,10 @@ pub fn main() {
 }
 
 
-
-
 fn test_get_variable() {
     let name = "isanem".to_string();
     let type_fncy = "vstring".to_string();
-    let value = "hello there".to_string();
+    let value = vec!["hello there".to_string()];
     let my_var = types::get_variable(name, type_fncy, value);
 
     dbg!(my_var);

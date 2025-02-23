@@ -1,3 +1,6 @@
+#[cfg(test)]
+use pretty_assertions::assert_eq;
+
 use super::*;
 
 
@@ -13,8 +16,8 @@ fn test_find_end_of_expression_1() {
         .split_ascii_whitespace().into_iter().map(String::from).collect();
 
     let (le_match, remainder) = parser::find_end_of_expression(&test_1);
-    assert_eq!(le_match, test_1_expected_match);
-    assert_eq!(remainder, test_1_expected_remainder);
+    assert_eq!(&test_1_expected_match, &le_match);
+    assert_eq!(&test_1_expected_remainder, &remainder);
 }
 
 #[test]
@@ -27,8 +30,8 @@ fn test_find_end_of_expression_2() {
         .split_ascii_whitespace().into_iter().map(String::from).collect();
 
     let (le_match, remainder) = parser::find_end_of_expression(&test_2);
-    assert_eq!(le_match, test_2_expected_match);
-    assert_eq!(remainder, test_2_expected_remainder);
+    assert_eq!(&test_2_expected_match, &le_match);
+    assert_eq!(&test_2_expected_remainder, &remainder);
 }
 
 // todo mut x without & mut x can cause issues in some cases
@@ -44,7 +47,7 @@ fn test_translate_type_fncy_compact() {
         
     let results_expected: Vec<String> = ["& mut usize", "& usize", "mut i32", "f32"].into_iter().map(String::from).collect();
     let results: Vec<String> = test_type_fncy.iter().map(types::translate_type_fncy_compact).collect();
-    debug_assert_eq!(results, results_expected);
+    debug_assert_eq!(&results_expected, &results);
 }
 
 
@@ -83,7 +86,7 @@ fn test_split_fncy_type() {
     let results: Vec<Vec<String>> = test_strings.iter().map(|x| types::split_fncy_type(*x))
     .map(|x| vec![x.0, x.1]).collect();
 
-    assert_eq!(results, results_expected);
+    assert_eq!(&results_expected, &results);
 }
 
 #[test]
@@ -116,5 +119,27 @@ pub fn test_extract_var_info() {
 
     // needs correct type
     let results: Vec<VarInfo> = test_strings.iter().map(|x| types::extract_var_info(&x.to_string())).collect();
-    assert_eq!(expected_results, results);
+
+    assert_eq!(&expected_results, &results);
+}
+
+#[test]
+fn test_let_handler() {
+    let test: Vec<Vec<String>> = [
+        "let number_1 : int = 15",
+        "let number_2 : int = 30",
+        "let result : vint = 0",
+    ].into_iter().map(|s| s.split(" ").map(String::from).collect::<Vec<String>>()).collect();
+
+    let test_expected = [
+        ["number_1", "int", "15"],
+        ["number_2", "int", "30"],
+        ["result", "vint", "0"],
+    ].into_iter().map(|s|
+        types::get_variable(s[0].to_string(), s[1].to_string(), vec![s[2].to_string()])
+    ).collect::<Vec<types::Variable>>();
+    
+    let result = test.iter().map(|s| parser::let_handler(&s)).collect::<Vec<types::Variable>>();
+    
+    assert_eq!(&test_expected, &result);
 }
