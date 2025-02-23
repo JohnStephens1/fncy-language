@@ -139,7 +139,7 @@ fn test_let_handler() {
         types::get_variable(s[0].to_string(), s[1].to_string(), vec![s[2].to_string()])
     ).collect::<Vec<types::Variable>>();
     
-    let result = test.iter().map(|s| parser::let_handler(&s)).collect::<Vec<types::Variable>>();
+    let result = test.iter().map(|s| parser::let_handler(&s).0).collect::<Vec<types::Variable>>();
     
     assert_eq!(&test_expected, &result);
 }

@@ -180,50 +180,47 @@ fn fun_call_handler(code: &Vec<String>) {
 
 }
 
-pub fn let_handler(code: &[String]) -> types::Variable {
+// currently requires an assignment
+pub fn let_handler(code: &[String]) -> (types::Variable, usize) {
     if code.first().expect("received empty string") != "let" { panic!("no let") };
 
-    // cases
-    // let name : type = exp
+    // case open:
     // let name : type -> let name : < type >
-
-    let i: usize = 0;
 
     let var_name = code[1].clone();
 
-
-
-    // remaining:
-    // case equals:
-    // : type = exp
     let equals_pos = code.iter().position(|s| s=="=").expect("no equals");
     let le_type = code[3..equals_pos].join(" ");
 
     let exp_end_i = get_i_of_end_of_expression(&code[equals_pos+1..]) + equals_pos+1;
     let exp = code[equals_pos+1..=exp_end_i].to_vec();
-    // case only_type:
-    // : type -> : < type >
 
-    get_variable(
+    let my_var = get_variable(
         var_name,
         le_type,
         exp
-    )
+    );
+
+    (my_var, exp_end_i)
 }
 
 
 fn analyze_code(code: &Vec<String>) {
     let mut i = 0;
 
+    // too much infinity, definitely need find a better solution
+    // rn only reads the functions
     while i < code.len() {
+        print!("e_i: {}  ", i);
         match code[i].as_str() {
             "fun" => {
                 let (my_fun, end) = fun_def_handler(&code[i..]);
-                i = end;
-
-                dbg!(&my_fun);
+                i += end;
             },
-            "let" => {let_handler(&code[i..]);},
+            "let" => {
+                let (my_var, end) = let_handler(&code[i..]);
+                i += end;
+            },
             _ => {} // println!("today i dont feel like doing aahnything")
         }
 
