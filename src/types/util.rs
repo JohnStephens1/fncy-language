@@ -18,7 +18,7 @@ pub fn get_param_type_hashmap() -> HashMap<String, String> {
 }
 
 
-pub fn split_fncy_type(string: &str) -> (String, String) {
+pub fn split_type_fncy_raw(string: &str) -> (String, String) {
     let chars: Vec<char> = string.chars().collect();
     let mut i = 0;
 
@@ -41,7 +41,14 @@ pub fn split_fncy_type(string: &str) -> (String, String) {
     }
 
     let prev_res = prev.iter().collect::<String>();
-    let le_type_res = le_type.iter().collect::<String>();
+    let type_fncy = le_type.iter().collect::<String>();
 
-    (prev_res, le_type_res)
+    (prev_res, type_fncy)
+}
+
+pub fn get_type_rs(type_fncy: &String) -> String {
+    let le_map = get_param_type_hashmap();
+    let type_rs = le_map.get(type_fncy).unwrap_or_else(|| { println!("didn't get a proper type! {}", type_fncy); type_fncy }).to_string();
+
+    type_rs
 }
