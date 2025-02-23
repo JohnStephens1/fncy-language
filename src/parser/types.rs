@@ -34,42 +34,10 @@ impl Parameter {
 fn get_string(string: &str) -> String { string.to_string() }
 
 
-#[derive(Debug)]
-pub struct Fun {
-    pub name: String,
-    pub parameters: Vec<Parameter>,
-    pub return_type: String,
-    pub code: Vec<String>
-}
 
 
-pub fn split_fncy_type(string: &str) -> (String, String) {
-    let chars: Vec<char> = string.chars().collect();
-    let mut i = 0;
 
-    let mut prev: &[char] = &chars[0..0];
-    let mut le_type: &[char] = &chars[0..0];
 
-    let mut last_char: char = ' ';
-    while i < chars.len() {
-        if chars[i]=='v' && last_char!='v' {
-            last_char = chars[i];
-            i += 1;
-        } else if chars[i]=='&' {
-            last_char = chars[i];
-            i += 1;
-        } else {
-            prev=&chars[..i];
-            le_type=&chars[i..];
-            break
-        }
-    }
-
-    let prev_res = prev.iter().collect::<String>();
-    let le_type_res = le_type.iter().collect::<String>();
-
-    (prev_res, le_type_res)
-}
 
 
 
