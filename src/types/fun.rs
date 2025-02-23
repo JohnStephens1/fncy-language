@@ -10,6 +10,7 @@ pub struct Fun {
     pub code: Vec<String>
 }
 // todo impl get return type
+// todo impl get parameters etc. in new
 
 
 // todo fixed, but still hideous xd feel free to update
@@ -67,7 +68,7 @@ pub struct Fun {
 // }
 
 // how bout we write a cleaner one xd
-fn get_parameters(mut slice: &[String]) -> Vec<Var> {
+pub fn get_parameters(mut slice: &[String]) -> Vec<Var> {
     slice = &slice[1..slice.len() - 1];
     let i: usize = 0;
 

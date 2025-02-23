@@ -6,7 +6,9 @@ use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
 
 use super::parser_util;
-use super::types::{self, get_variable};
+
+use crate::util::char_sets;
+use crate::types::{var::Var, fun::Fun};
 
 
 fn vec_gen_boi() -> Vec<String> {
@@ -36,9 +38,9 @@ fn get_i_of_end_of_expression(code: &[String]) -> usize {
     let mut was_last_operator = true;
 
     let matchers = get_matchers();
-    let braces = types::get_braces();
-    let string_delims = types::get_string_delims();
-    let operators = types::get_operator_list();
+    let braces = char_sets::get_braces();
+    let string_delims = char_sets::get_string_delims();
+    let operators = char_sets::get_operator_list();
 
     // todo can theoretically go out of bounds, should test for that
     // excplicit none test, safe indexing or while i < code.len
@@ -73,7 +75,7 @@ pub fn find_end_of_expression(code: &Vec<String>) -> (Vec<String>, Vec<String>) 
 
 
 fn expression_handler(code: &Vec<String>) {
-    let operator_vec = types::get_operator_list();
+    let operator_vec = char_sets::get_operator_list();
 
     for string in code.iter() {
     }
@@ -81,84 +83,84 @@ fn expression_handler(code: &Vec<String>) {
 
 
 // todo implement translate_type_fncy
-fn get_parameter(name: String, type_fncy: String, default_value: String) -> types::Parameter {
-    let le_map = types::get_param_type_hashmap();
-    let type_rs = le_map.get(&type_fncy).unwrap().clone();
+// fn get_parameter(name: String, type_fncy: String, default_value: String) -> types::Parameter {
+//     let le_map = types::get_param_type_hashmap();
+//     let type_rs = le_map.get(&type_fncy).unwrap().clone();
 
-    types::Parameter {
-        name,
-        type_fncy,
-        type_rs,
-        default_value
-    }
-}
+//     types::Parameter {
+//         name,
+//         type_fncy,
+//         type_rs,
+//         default_value
+//     }
+// }
 
-// todo fixed, but still hideous xd feel free to update
-fn get_parameters(mut params: &[String]) -> Vec<types::Parameter> {
-    params = &params[1..params.len() - 1];
+// // todo fixed, but still hideous xd feel free to update
+// fn get_parameters(mut params: &[String]) -> Vec<types::Parameter> {
+//     params = &params[1..params.len() - 1];
 
-    let mut parameters: Vec<types::Parameter> = Vec::new();
+//     let mut parameters: Vec<types::Parameter> = Vec::new();
 
-    let mut comma_index: Vec<usize> = Vec::new();
-    let mut colon_index: Vec<usize> = Vec::new();
-    let mut equals_index: Vec<usize> = Vec::new();
+//     let mut comma_index: Vec<usize> = Vec::new();
+//     let mut colon_index: Vec<usize> = Vec::new();
+//     let mut equals_index: Vec<usize> = Vec::new();
 
-    let mut default_value = "".to_string();
+//     let mut default_value = "".to_string();
 
-    let mut i: usize = 0;
-    for string in params {
-        match string.as_str() {
-            "," => comma_index.push(i),
-            ":" => colon_index.push(i),
-            "=" => equals_index.push(i),
-            _ => {}
-        }
+//     let mut i: usize = 0;
+//     for string in params {
+//         match string.as_str() {
+//             "," => comma_index.push(i),
+//             ":" => colon_index.push(i),
+//             "=" => equals_index.push(i),
+//             _ => {}
+//         }
 
-        i += 1;
-    }
+//         i += 1;
+//     }
 
-    i = 0;
-    let mut i_equals: i32 = 0;
-    for colon_idx in &colon_index {
-        if let Some(equals_idx) = equals_index.get(i_equals as usize) {
-            if let Some(comma_idx) = comma_index.get(i) {
-                if comma_idx < equals_idx {
-                    i_equals -= 1;
-                } else {
-                    default_value = params[*equals_idx + 1..*comma_idx].join(" ");
-                }
-            } else {
-                default_value = params[*equals_idx + 1..].join(" ");
-            }
-        }
+//     i = 0;
+//     let mut i_equals: i32 = 0;
+//     for colon_idx in &colon_index {
+//         if let Some(equals_idx) = equals_index.get(i_equals as usize) {
+//             if let Some(comma_idx) = comma_index.get(i) {
+//                 if comma_idx < equals_idx {
+//                     i_equals -= 1;
+//                 } else {
+//                     default_value = params[*equals_idx + 1..*comma_idx].join(" ");
+//                 }
+//             } else {
+//                 default_value = params[*equals_idx + 1..].join(" ");
+//             }
+//         }
 
-        parameters.push(get_parameter(
-            params[colon_idx - 1].clone(),
-            params[colon_idx + 1].clone(),
-            default_value.clone()
-        ));
+//         parameters.push(get_parameter(
+//             params[colon_idx - 1].clone(),
+//             params[colon_idx + 1].clone(),
+//             default_value.clone()
+//         ));
 
-        i_equals += 1;
-        i += 1;
-        default_value = "".to_string();
-    }
+//         i_equals += 1;
+//         i += 1;
+//         default_value = "".to_string();
+//     }
 
-    parameters
-}
+//     parameters
+// }
 
 
 fn get_fun(slice: &[String]) {
 
 }
 
-fn fun_def_handler(code: &[String]) -> (types::Fun, usize) {
+fn fun_def_handler(code: &[String]) -> (Fun, usize) {
     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
 
     let fun_name = code[1].clone();
 
     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
     let raw_params = &code[2..=end_of_params];
-    let fun_params = get_parameters(raw_params);
+    let fun_params = crate::types::fun::get_parameters(raw_params);
 
     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
     let raw_return_type = &code[end_of_params+1..start_of_code];
@@ -167,7 +169,7 @@ fn fun_def_handler(code: &[String]) -> (types::Fun, usize) {
     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
     let fun_code = code[start_of_code..=end_of_code].to_vec();
 
-    let my_fun = types::Fun {
+    let my_fun = Fun {
         name: fun_name,
         parameters: fun_params,
         return_type,
@@ -182,7 +184,7 @@ fn fun_call_handler(code: &Vec<String>) {
 }
 
 // currently requires an assignment
-pub fn let_handler(code: &[String]) -> (types::Variable, usize) {
+pub fn let_handler(code: &[String]) -> (Var, usize) {
     if code.first().expect("received empty string") != "let" { panic!("no let") };
 
     // case open:
@@ -196,7 +198,7 @@ pub fn let_handler(code: &[String]) -> (types::Variable, usize) {
     let exp_end_i = get_i_of_end_of_expression(&code[equals_pos+1..]) + equals_pos+1;
     let exp = code[equals_pos+1..=exp_end_i].to_vec();
 
-    let my_var = get_variable(
+    let my_var = Var::new(
         var_name,
         le_type,
         exp
@@ -261,18 +263,6 @@ impl Smth {
     }
 }
 
-fn smthhh(string: &mut String) -> &mut String {
-    let mut smth: &mut String = &mut string.clone();
-
-    let mut my_int = 0;
-    let my_ref: &mut i32 = my_int;
-
-    *my_ref += 1;
-
-
-    string
-}
-
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
@@ -289,7 +279,7 @@ fn test_get_variable() {
     let name = "isanem".to_string();
     let type_fncy = "vstring".to_string();
     let value = vec!["hello there".to_string()];
-    let my_var = types::get_variable(name, type_fncy, value);
+    let my_var = Var::new(name, type_fncy, value);
 
     dbg!(my_var);
 }
