@@ -9,6 +9,7 @@ mod lexer;
 mod parser;
 mod util;
 mod textifier;
+mod types;
 
 
 fn main() {

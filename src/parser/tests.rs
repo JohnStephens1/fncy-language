@@ -106,15 +106,15 @@ pub fn test_extract_var_info() {
     ];
 
     let expected_results: Vec<VarInfo> = vec![
-        VarInfo { ref_count: 3, is_ref: true, is_var_ref: true, is_var: true, le_type: "hello".to_string(), },
-        VarInfo { ref_count: 1, is_ref: true, is_var_ref: false, is_var: true, le_type: "hello".to_string(), },
-        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, le_type: "hello".to_string(), },
-        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: true, le_type: "hello".to_string(), },
-        VarInfo { ref_count: 3, is_ref: true, is_var_ref: false, is_var: true, le_type: "vhello".to_string(), },
-        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, le_type: "vvvv".to_string(), },
-        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, le_type: "hellou".to_string(), },
-        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, le_type: "Vhello".to_string(), },
-        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: false, le_type: "Vhello".to_string() }
+        VarInfo { ref_count: 3, is_ref: true, is_var_ref: true, is_var: true, type_fncy: "hello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: false, is_var: true, type_fncy: "hello".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, type_fncy: "hello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: true, type_fncy: "hello".to_string(), },
+        VarInfo { ref_count: 3, is_ref: true, is_var_ref: false, is_var: true, type_fncy: "vhello".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: true, type_fncy: "vvvv".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, type_fncy: "hellou".to_string(), },
+        VarInfo { ref_count: 0, is_ref: false, is_var_ref: false, is_var: false, type_fncy: "Vhello".to_string(), },
+        VarInfo { ref_count: 1, is_ref: true, is_var_ref: true, is_var: false, type_fncy: "Vhello".to_string() }
     ];
 
     // needs correct type

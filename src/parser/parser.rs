@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::str::Chars;
+use std::string;
 
 use crate::lexer::{different_approach, lexer};
 use crate::util::processing::{self, split_matching_parenthesis};
@@ -244,11 +245,38 @@ fn run_parser(code: &Vec<String>) {
     analyze_code(code);
 }
 
+struct Smth {
+    hello: String,
+    world: String,
+    nuggit: String
+}
+
+impl Smth {
+    fn new(nuggit: String) -> Self {
+        Self {
+            hello: "hello".to_string(),
+            world: "world".to_string(),
+            nuggit
+        }
+    }
+}
+
+fn smthhh(string: &mut String) -> &mut String {
+    let mut smth: &mut String = &mut string.clone();
+
+    let mut my_int = 0;
+    let my_ref: &mut i32 = my_int;
+
+    *my_ref += 1;
+
+
+    string
+}
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
-
+    let smth = Smth::new("hello".to_string());
     // test_let_handler();
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();

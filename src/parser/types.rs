@@ -1,7 +1,7 @@
 use std::{collections::HashMap, result, string};
 
 
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct Parameter {
     // add references, mutability
     pub name: String,
@@ -9,6 +9,30 @@ pub struct Parameter {
     pub type_rs: String,
     pub default_value: String
 }
+
+impl Parameter {
+    fn new(name: String, type_fncy: String) -> Self {
+        Self {
+            name,
+            type_fncy,
+            type_rs: "".to_string(),
+            default_value: "".to_string()
+        }
+    }
+
+    fn new_wd(name: String, type_fncy: String, default_value: String) -> Self {
+        Self {
+            name,
+            type_fncy,
+            type_rs: "".to_string(),
+            default_value
+        }
+    }
+
+}
+
+fn get_string(string: &str) -> String { string.to_string() }
+
 
 #[derive(Debug)]
 pub struct Fun {
@@ -18,15 +42,6 @@ pub struct Fun {
     pub code: Vec<String>
 }
 
-#[derive(Debug, PartialEq)]
-pub struct Variable {
-    // add references
-    pub name: String,
-    pub is_mutable: bool,
-    pub type_fncy: String,
-    pub type_rs: String,
-    pub value: Vec<String>
-}
 
 pub fn split_fncy_type(string: &str) -> (String, String) {
     let chars: Vec<char> = string.chars().collect();
@@ -56,41 +71,11 @@ pub fn split_fncy_type(string: &str) -> (String, String) {
     (prev_res, le_type_res)
 }
 
-pub fn extract_var_info(type_fncy: &String) -> VarInfo {
-    let (prev, le_type) = split_fncy_type(type_fncy);
-
-    let ref_count: usize = prev.matches("&").count();
-    let is_ref: bool = if ref_count > 0 { true } else { false };
-    let is_var_ref: bool = if prev.matches("v&").count() > 0 { true } else { false };
-    let is_var: bool = if prev.ends_with("v") { true } else { false };
-    let le_type = le_type;
-
-    // dbg!((
-    //     &ref_count,
-    //     &is_ref,
-    //     &is_var_ref,
-    //     &is_var,
-    //     &le_type,
-    // ));
-
-    VarInfo {
-        ref_count,
-        is_ref,
-        is_var_ref,
-        is_var,
-        le_type,
-    }
-}
 
 
-#[derive(Debug, PartialEq)]
-pub struct VarInfo {
-    pub ref_count: usize,
-    pub is_ref: bool,
-    pub is_var_ref: bool,
-    pub is_var: bool,
-    pub le_type: String,
-}
+
+
+
 
 
 // todo once types have properly crystallized implement remaining cases
@@ -155,18 +140,6 @@ pub fn translate_type_fncy(type_fncy: &String) -> (bool, String) {
         .to_string();
 
     (is_mutable, type_rs)
-}
-
-pub fn get_variable(name: String, type_fncy: String, value: Vec<String>) -> Variable {
-    let (is_mutable, type_rs) = translate_type_fncy(&type_fncy);
-
-    Variable {
-        name,
-        is_mutable,
-        type_fncy,
-        type_rs,
-        value,
-    }
 }
 
 
