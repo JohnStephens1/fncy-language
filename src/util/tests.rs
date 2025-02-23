@@ -1,3 +1,6 @@
+#[cfg(test)]
+use pretty_assertions::assert_eq;
+
 use super::*;
 
 
@@ -14,8 +17,8 @@ fn test_split_at_next_delim() {
         .into_iter().map(String::from).collect();
 
     let (le_match, remainder) = processing::split_at_next_delim(&test, "\"");
-    assert_eq!(le_match, test_expected_match);
-    assert_eq!(remainder, test_expected_remainder);
+    assert_eq!(&test_expected_match, &le_match);
+    assert_eq!(&test_expected_remainder, &remainder);
 }
 
 #[test]
@@ -30,6 +33,6 @@ fn test_split_matching_brace() {
         .split_ascii_whitespace().into_iter().map(String::from).collect();
 
     let (le_match, remainder): (Vec<String>, Vec<String>) = processing::split_matching_brace(&test_vec);
-    assert_eq!(le_match, test_expected_match);
-    assert_eq!(remainder, test_expected_remainder);
+    assert_eq!(&test_expected_match, &le_match);
+    assert_eq!(&test_expected_remainder, &remainder);
 }
