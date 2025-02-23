@@ -58,10 +58,71 @@ fn get_parameters(mut params: &[String]) -> Vec<Var> {
 
         i_equals += 1;
         i += 1;
-        default_value = "".to_string();
+        default_value = vec!["".to_string()];
     }
 
     parameters
+}
+
+// how bout we write a cleaner one xd
+fn get_parameters_new(mut slice: &[String]) -> Vec<Var> {
+    slice = &slice[1..slice.len() - 1];
+    let i: usize = 0;
+    let mut params: Vec<Var> = Vec::new();
+    let mut expression: Vec<String> = Vec::new();
+    let mut name: String = "".to_string();
+    let mut type_fncy: Vec<String> = vec!["".to_string()];
+
+    if slice.len() == 0 {
+        return params
+    }
+
+    let mut last_id_string: &str = ",";
+
+    for string in slice {
+        // last_string = match string.as_str() {
+        match last_id_string {
+            "," => {
+                // next is name
+                name = string.clone();
+            },
+            ":" => {
+                // next is type
+                type_fncy.push(string.clone());
+            }
+            _ => {
+                // otherwise, name, type, or expression
+            }
+        }
+
+        last_id_string = match string.as_str() {
+            "," => {
+                // next is name
+                if !&name.is_empty() && !type_fncy.is_empty() {
+                    if expression.is_empty() { expression.push("".to_string()); }
+
+                    Var::new(name.clone(), type_fncy.join(" "), expression.clone());
+                }
+
+                name = "".to_string();
+                type_fncy.clear();
+                type_fncy[0] = "".to_string();
+                expression.clear();
+
+                ","
+            },
+            ":" => {
+                // next is type
+                ":"
+            }
+            _ => {
+                // otherwise, name, type, or expression
+                string
+            }
+        };
+    }
+
+    params
 }
 
 
