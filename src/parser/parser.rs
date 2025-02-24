@@ -265,7 +265,7 @@ fn test_le_fun() {
     let test: Vec<String> = "( hello : && vint , my : int = 5 , name : int = 5 * 5 * 5 , jeff : int )".split(" ").map(String::from).collect();
     // dbg!(&test[1..test.len()-1]);
 
-    crate::types::fun::and_another_one(&test);
+    crate::types::fun::get_parameters(&test);
 }
 
 
