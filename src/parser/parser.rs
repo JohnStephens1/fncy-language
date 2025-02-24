@@ -247,31 +247,25 @@ fn run_parser(code: &Vec<String>) {
     analyze_code(code);
 }
 
-struct Smth {
-    hello: String,
-    world: String,
-    nuggit: String
-}
-
-impl Smth {
-    fn new(nuggit: String) -> Self {
-        Self {
-            hello: "hello".to_string(),
-            world: "world".to_string(),
-            nuggit
-        }
-    }
-}
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
-    let smth = Smth::new("hello".to_string());
+    
+    test_le_fun();
     // test_let_handler();
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();
     // test_get_variable();
     // test_map();
+}
+
+
+fn test_le_fun() {
+    let test: Vec<String> = "( hello : && vint , my : int = 5 , name : int = 5 * 5 * 5 , jeff : int )".split(" ").map(String::from).collect();
+    // dbg!(&test[1..test.len()-1]);
+
+    crate::types::fun::and_another_one(&test);
 }
 
 

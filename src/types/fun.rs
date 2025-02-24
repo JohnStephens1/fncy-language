@@ -1,3 +1,5 @@
+use std::iter::Enumerate;
+
 use super::var::Var;
 use crate::util::processing;
 
@@ -67,67 +69,193 @@ pub struct Fun {
 //     parameters
 // }
 
-// how bout we write a cleaner one xd
-pub fn get_parameters(mut slice: &[String]) -> Vec<Var> {
-    slice = &slice[1..slice.len() - 1];
-    let i: usize = 0;
 
-    let mut params: Vec<Var> = Vec::new();
-    let mut expression: Vec<String> = Vec::new();
-    let mut name: String = "".to_string();
-    let mut type_fncy: Vec<String> = vec!["".to_string()];
+// proper type_fncy -> type_rs conversion needs to be done in Var
+pub fn and_another_one(strings: &[String]) -> Vec<Var>{
+    let mut marker = 0;
+    let mut last_id_char = ",";
 
-    if slice.len() == 0 {
-        return params
-    }
+    let mut name = "".to_string();
+    let mut type_fncy = "".to_string();
+    let mut value: Vec<String> = Vec::new();
 
-    let mut last_id_string: &str = ",";
+    let mut var_vec: Vec<Var> = Vec::new();
 
-    for string in slice {
-        // last_string = match string.as_str() {
-        match last_id_string {
-            "," => {
-                // next is name
-                name = string.clone();
-            },
+
+    for (i, string) in strings.iter().enumerate() {
+        match string.as_str() {
             ":" => {
-                // next is type
-                type_fncy.push(string.clone());
-            }
-            _ => {
-                // otherwise, name, type, or expression
-            }
-        }
+                name = strings[marker+1..i].join("");
 
-        last_id_string = match string.as_str() {
-            "," => {
-                // next is name
-                if !&name.is_empty() && !type_fncy.is_empty() {
-                    if expression.is_empty() { expression.push("".to_string()); }
+                last_id_char = ":";
+                marker = i;
+            },
+            "=" => {
+                type_fncy = strings[marker+1..i].join(" ");
 
-                    params.push(Var::new(name.clone(), type_fncy.join(" "), expression.clone()));
-                }
+                last_id_char = "=";
+                marker = i;
+            }
+            s if s == "," || i == strings.len()-1 => {
+                if last_id_char == ":" { type_fncy = strings[marker+1..i].join(" ") }
+                else if last_id_char == "=" { value = strings[marker+1..i].to_vec() }
+
+                var_vec.push(Var::new(name, type_fncy, value));
 
                 name = "".to_string();
-                type_fncy.clear();
-                type_fncy[0] = "".to_string();
-                expression.clear();
+                type_fncy = "".to_string();
+                value = Vec::new();
 
-                ","
-            },
-            ":" => {
-                // next is type
-                ":"
+                last_id_char = ",";
+                marker = i;
             }
-            _ => {
-                // otherwise, name, type, or expression
-                string
-            }
-        };
+            _ => {}
+        }
     }
 
-    params
+
+    dbg!(&var_vec);
+
+    var_vec
 }
+
+// how bout we write a cleaner one xd
+// pub fn get_parameters(mut slice: &[String]) -> Vec<Var> {
+//     slice = &slice[1..slice.len() - 1];
+//     let mut i: usize = 0;
+//     let slice_len: usize = slice.len();
+
+//     let mut params: Vec<Var> = Vec::new();
+//     let mut expression: Vec<String> = Vec::new();
+//     let mut name: String = "".to_string();
+//     let mut type_fncy: Vec<String> = Vec::new();
+
+//     if slice.len() == 0 {
+//         return params
+//     }
+
+//     let mut last_id_string: &str = ",";
+
+//     if let Some(next_colon_pos) = slice.iter().position(|x| x==":") {
+//         name = slice[i..next_colon_pos].join("");
+//         i = next_colon_pos;
+//     }
+//     if let Some(next_comma_pos) = slice.iter().position(|x| x==",") {
+//         // type_fncy = slice[i..next_comma_pos]
+//     }
+//     slice.iter().position(|x| x==",");
+//     slice.iter().position(|x| x=="=");
+
+//     params
+    // slice = &slice[1..slice.len() - 1];
+    // let mut i: usize = 0;
+    // let slice_len: usize = slice.len();
+
+    // let mut params: Vec<Var> = Vec::new();
+    // let mut expression: Vec<String> = Vec::new();
+    // let mut name: String = "".to_string();
+    // let mut type_fncy: Vec<String> = Vec::new();
+
+    // if slice.len() == 0 {
+    //     return params
+    // }
+
+    // let mut last_id_string: &str = ",";
+    // vec![""].append()
+
+    // // for string in slice.iter().chain([",".to_string()].iter()) {
+    // for current_string in slice {
+    //     // last_string = match string.as_str() {
+    //     match (last_id_string, current_string.as_str(), i) {
+    //         x if (x.0 == "," && x.1 != ":" && x.2 != 0) || i == slice_len => { // last entry won't be included...
+    //             if expression.is_empty() { expression.push("".to_string()); }
+    //             params.push(Var::new(name.clone(), type_fncy.join(" "), expression.clone()));
+
+    //             name = "".to_string();
+    //             type_fncy.clear();
+    //             expression.clear();
+    //         }
+    //         x if x.0 == "," && x.1 != ":" => name = current_string.clone(),
+    //         (",", ":", _) => name = current_string.clone(),
+    //         (":", ",", _) => type_fncy.push(current_string.clone()),
+    //         (":", "=", _) => expression.push(current_string.clone()),
+    //         _ => {
+    //             dbg!(&last_id_string);
+    //             dbg!(&current_string);
+    //             dbg!(&i);
+    //             // otherwise, name, type, or expression
+    //         }
+    //     }
+
+    //     last_id_string = match current_string.as_str() {
+    //         "," => ",",
+    //         ":" => ":",
+    //         "=" => "=",
+    //         _ => {last_id_string}
+    //     };
+
+    //     i += 1;
+    // }
+    // dbg!(&params);
+
+    // params
+
+
+
+
+    // for string in slice {
+    //     // last_string = match string.as_str() {
+    //     match last_id_string {
+    //         "," => {
+    //             // next is name
+    //             name = string.clone();
+    //         },
+    //         ":" => {
+    //             // next is type
+    //             type_fncy.push(string.clone());
+    //         }
+    //         "=" => {
+    //             // next is expression
+    //             expression.push(string.clone());
+    //         }
+    //         _ => {
+    //             // otherwise, name, type, or expression
+    //         }
+    //     }
+
+    //     last_id_string = match string.as_str() {
+    //         "," => {
+    //             // next is name
+    //             if !&name.is_empty() && !&type_fncy.is_empty() {
+    //                 if expression.is_empty() { expression.push("".to_string()); }
+
+    //                 params.push(Var::new(name.clone(), type_fncy.join(" "), expression.clone()));
+    //             }
+
+    //             name = "".to_string();
+    //             type_fncy.clear();
+    //             expression.clear();
+
+    //             ","
+    //         },
+    //         ":" => {
+    //             // next is type
+    //             ":"
+    //         },
+    //         "=" => {
+    //             // next is expression
+    //             "="
+    //         }
+    //         _ => {
+    //             // otherwise, name, type, or expression
+    //             last_id_string
+    //         }
+    //     };
+    // }
+    // dbg!(&params);
+
+    // params
+// }
 
 
 fn get_fun(slice: &[String]) {
@@ -141,7 +269,8 @@ fn fun_def_handler(code: &[String]) -> (Fun, usize) {
 
     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
     let raw_params = &code[2..=end_of_params];
-    let fun_params = get_parameters(raw_params);
+    // let fun_params = get_parameters(raw_params);
+    let fun_params = and_another_one(raw_params);
 
     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
     let raw_return_type = &code[end_of_params+1..start_of_code];
