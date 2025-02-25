@@ -1,5 +1,3 @@
-use std::iter::Enumerate;
-
 use super::var::Var;
 use crate::util::processing;
 
@@ -20,11 +18,13 @@ pub fn get_parameters(strings: &[String]) -> Vec<Var>{
     let mut marker = 0;
     let mut last_id_char = ",";
 
+    let mut var_vec: Vec<Var> = Vec::new();
+    if strings.is_empty() { return var_vec }
+
     let mut name = "".to_string();
     let mut type_fncy = "".to_string();
     let mut value: Vec<String> = Vec::new();
 
-    let mut var_vec: Vec<Var> = Vec::new();
 
     for (i, string) in strings.iter().enumerate() {
         match string.as_str() {
@@ -67,14 +67,13 @@ fn get_fun(slice: &[String]) {
 
 }
 
-fn fun_def_handler(code: &[String]) -> (Fun, usize) {
+pub fn fun_def_handler(code: &[String]) -> (Fun, usize) {
     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
 
     let fun_name = code[1].clone();
 
     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
     let raw_params = &code[2..=end_of_params];
-    // let fun_params = get_parameters(raw_params);
     let fun_params = get_parameters(raw_params);
 
     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");

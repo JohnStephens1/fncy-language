@@ -8,7 +8,7 @@ use crate::util::processing::{self, split_matching_parenthesis};
 use super::parser_util;
 
 use crate::util::char_sets;
-use crate::types::{var::Var, fun::Fun};
+use crate::types::{var, fun};
 
 
 fn vec_gen_boi() -> Vec<String> {
@@ -95,96 +95,43 @@ fn expression_handler(code: &Vec<String>) {
 //     }
 // }
 
-// // todo fixed, but still hideous xd feel free to update
-// fn get_parameters(mut params: &[String]) -> Vec<types::Parameter> {
-//     params = &params[1..params.len() - 1];
-
-//     let mut parameters: Vec<types::Parameter> = Vec::new();
-
-//     let mut comma_index: Vec<usize> = Vec::new();
-//     let mut colon_index: Vec<usize> = Vec::new();
-//     let mut equals_index: Vec<usize> = Vec::new();
-
-//     let mut default_value = "".to_string();
-
-//     let mut i: usize = 0;
-//     for string in params {
-//         match string.as_str() {
-//             "," => comma_index.push(i),
-//             ":" => colon_index.push(i),
-//             "=" => equals_index.push(i),
-//             _ => {}
-//         }
-
-//         i += 1;
-//     }
-
-//     i = 0;
-//     let mut i_equals: i32 = 0;
-//     for colon_idx in &colon_index {
-//         if let Some(equals_idx) = equals_index.get(i_equals as usize) {
-//             if let Some(comma_idx) = comma_index.get(i) {
-//                 if comma_idx < equals_idx {
-//                     i_equals -= 1;
-//                 } else {
-//                     default_value = params[*equals_idx + 1..*comma_idx].join(" ");
-//                 }
-//             } else {
-//                 default_value = params[*equals_idx + 1..].join(" ");
-//             }
-//         }
-
-//         parameters.push(get_parameter(
-//             params[colon_idx - 1].clone(),
-//             params[colon_idx + 1].clone(),
-//             default_value.clone()
-//         ));
-
-//         i_equals += 1;
-//         i += 1;
-//         default_value = "".to_string();
-//     }
-
-//     parameters
-// }
-
 
 fn get_fun(slice: &[String]) {
 
 }
 
-fn fun_def_handler(code: &[String]) -> (Fun, usize) {
-    if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
+// fn fun_def_handler(code: &[String]) -> (Fun, usize) {
+//     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
 
-    let fun_name = code[1].clone();
+//     let fun_name = code[1].clone();
 
-    let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
-    let raw_params = &code[2..=end_of_params];
-    let fun_params = crate::types::fun::get_parameters(raw_params);
+//     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
+//     let raw_params = &code[2..=end_of_params];
+//     let fun_params = Fun::fun::get_parameters(raw_params);
 
-    let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
-    let raw_return_type = &code[end_of_params+1..start_of_code];
-    let return_type = if raw_return_type.is_empty() { "".to_string() } else { raw_return_type[1..].join(" ") };
+//     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
+//     let raw_return_type = &code[end_of_params+1..start_of_code];
+//     let return_type = if raw_return_type.is_empty() { "".to_string() } else { raw_return_type[1..].join(" ") };
 
-    let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
-    let fun_code = code[start_of_code..=end_of_code].to_vec();
+//     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
+//     let fun_code = code[start_of_code..=end_of_code].to_vec();
 
-    let my_fun = Fun {
-        name: fun_name,
-        parameters: fun_params,
-        return_type,
-        code: fun_code
-    };
+//     let my_fun = Fun {
+//         name: fun_name,
+//         parameters: fun_params,
+//         return_type,
+//         code: fun_code
+//     };
 
-    (my_fun, end_of_code)
-}
+//     (my_fun, end_of_code)
+// }
 
 fn fun_call_handler(code: &Vec<String>) {
 
 }
 
 // currently requires an assignment
-pub fn let_handler(code: &[String]) -> (Var, usize) {
+pub fn let_handler(code: &[String]) -> (var::Var, usize) {
     if code.first().expect("received empty string") != "let" { panic!("no let") };
 
     // case open:
@@ -198,7 +145,7 @@ pub fn let_handler(code: &[String]) -> (Var, usize) {
     let exp_end_i = get_i_of_end_of_expression(&code[equals_pos+1..]) + equals_pos+1;
     let exp = code[equals_pos+1..=exp_end_i].to_vec();
 
-    let my_var = Var::new(
+    let my_var = var::Var::new(
         var_name,
         le_type,
         exp
@@ -213,13 +160,14 @@ fn analyze_code(code: &Vec<String>) {
     let mut start;
     let mut fun_start_end: Vec<(usize, usize)> = Vec::new();
 
-    // too much infinity, definitely need find a better solution
+    // might want to find an alternative to the loop
+    // dont like the index return as is
     // rn only reads the functions
     while i < code.len() {
         match code[i].as_str() {
             "fun" => {
                 start = i;
-                let (my_fun, end) = fun_def_handler(&code[i..]);
+                let (my_fun, end) = fun::fun_def_handler(&code[i..]);
                 fun_start_end.push((start, end));
                 i += end;
             },
@@ -252,12 +200,67 @@ pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
     run_parser(&code);
     
-    test_le_fun();
+    // test_le_fun();
+
+    test_fncy_boi();
     // test_let_handler();
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();
     // test_get_variable();
     // test_map();
+}
+
+
+
+fn test_fncy_boi() {
+    let test_strings: Vec<&str> = vec![
+        "v&&&vhello",
+        "&&&vhello",
+        "&&vhello",
+        "&vhello",
+        "vhello",
+        "v&vhello",
+        "&&&vvhello",
+        "v&vvvvvv",
+        "vvvvv",
+        "hellou",
+        "Vhello",
+        "v&Vhello",
+        "v&& vpataht",
+        "&&& hello",
+        "&&hello",
+        "&hello",
+    ];
+
+    let results_expected: Vec<Vec<String>> = [
+        ["v&&&v", "hello"],
+        ["&&&v", "hello"],
+        ["&&v", "hello"],
+        ["&v", "hello"],
+        ["v", "hello"],
+        ["v&v", "hello"],
+        ["&&&v", "vhello"],
+        ["v&v", "vvvvv"],
+        ["v", "vvvv"],
+        ["", "hellou"],
+        ["", "Vhello"],
+        ["v&", "Vhello"],
+        ["v&&v", "pataht"],
+        ["&&&", "hello"],
+        ["&&", "hello"],
+        ["&", "hello"]
+    ].into_iter().map(|x| x.into_iter().map(String::from).collect()).collect();
+
+    let results: Vec<Vec<String>> = test_strings.iter().map(|x| crate::types::util::and_another_fncy_type_splitter(x))
+    .map(|x| vec![x.0, x.1]).collect();
+
+    assert_eq!(&results_expected, &results);
+
+    // let mah_boi = crate::types::util::split_type_fncy_raw(&test);
+
+    dbg!(&results);
+
+
 }
 
 
@@ -273,7 +276,7 @@ fn test_get_variable() {
     let name = "isanem".to_string();
     let type_fncy = "vstring".to_string();
     let value = vec!["hello there".to_string()];
-    let my_var = Var::new(name, type_fncy, value);
+    let my_var = var::Var::new(name, type_fncy, value);
 
     dbg!(my_var);
 }

@@ -17,7 +17,8 @@ pub fn get_param_type_hashmap() -> HashMap<String, String> {
     .collect()
 }
 
-
+// the question is, include & value -> &v alue?
+// guess for more complex types capital letters are in order
 pub fn split_type_fncy_raw(string: &str) -> (String, String) {
     let chars: Vec<char> = string.chars().collect();
     let mut i = 0;
@@ -44,6 +45,30 @@ pub fn split_type_fncy_raw(string: &str) -> (String, String) {
     let type_fncy = le_type.iter().collect::<String>();
 
     (prev_res, type_fncy)
+}
+
+pub fn and_another_fncy_type_splitter(string: &str) -> (String, String) {
+    let chars: Vec<char> = string.chars().filter(|x| !x.is_whitespace()).collect();
+
+    let mut end = 0;
+    let mut last_char = ' ';
+
+    for (i, char) in chars.iter().enumerate() {
+        match (i, char) {
+            (0, 'v') => {}
+            (_, 'v') => { if last_char == '&' { end+=1 } break } //final v reached
+            (_, '&') => {}
+            _ => { break }
+        }
+
+        end += 1;
+        last_char = *char;
+    }
+
+    let prev: String = chars[..end].iter().collect();
+    let type_fncy: String = chars[end..].iter().collect();
+
+    (prev, type_fncy)
 }
 
 pub fn get_type_rs(type_fncy: &String) -> String {
