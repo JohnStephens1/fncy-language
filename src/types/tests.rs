@@ -2,6 +2,7 @@
 use pretty_assertions::assert_eq;
 use super::*;
 
+
 #[test]
 fn test_split_type_fncy_raw() {
     let test_strings: Vec<&str> = vec![
@@ -49,8 +50,8 @@ fn test_split_type_fncy_raw() {
 }
 
 
-// #[test]
-pub fn test_extract_var_info() {
+#[test]
+fn test_extract_var_info() {
     use var::VarInfo;
 
     let test_strings: Vec<&str> = vec![
