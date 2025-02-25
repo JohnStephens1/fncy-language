@@ -1,12 +1,7 @@
 use std::collections::HashMap;
-use std::str::Chars;
-use std::string;
 
-use crate::lexer::{different_approach, lexer};
-use crate::util::processing::{self, split_matching_parenthesis};
-
-use super::parser_util;
-
+use crate::lexer::different_approach;
+use crate::util::processing;
 use crate::util::char_sets;
 use crate::types::{var, fun};
 

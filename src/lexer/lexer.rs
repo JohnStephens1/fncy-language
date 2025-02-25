@@ -1,17 +1,7 @@
-use std::collections::btree_map::Range;
 use std::collections::HashMap;
-use std::fs;
-use std::fs::read_to_string;
-// use std::env;
-use std::path::Path;
-use std::result;
-use crate::lexer::preprocessing;
-use crate::lexer::tokenizer;
 
 use crate::lexer::different_approach;
 
-
-// fn word ( par1 : u32 , par2 : u32 ) -> u32 { }
 
 fn get_hash_map() -> HashMap<String, String> {
     let le_map: HashMap<String, String> = vec![
