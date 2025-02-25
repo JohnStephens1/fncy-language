@@ -1,4 +1,4 @@
-use super::var::Var;
+use super::var::{Var, VarInfo};
 use crate::util::processing;
 
 
@@ -10,6 +10,42 @@ pub struct Fun {
     pub parameters: Vec<Var>,
     pub return_type: String,
     pub code: Vec<String>
+}
+
+// todo
+// automate parameter getting
+impl Fun {
+    pub fn new(name: String, parameters: Vec<Var>, return_type_fncy_raw: String, code: &[String]) -> Self {
+        let return_type = ReturnType::new(return_type_fncy_raw);
+
+        Fun {
+            name,
+            parameters,
+            return_type,
+            code: code.to_vec()
+        }
+    }
+}
+
+pub struct ReturnType {
+    pub type_fncy: String,
+    pub type_rs: String,
+    pub var_info: VarInfo
+}
+
+impl ReturnType {
+    pub fn new(type_fncy: String) -> Self {
+        let (type_fncy, type_rs, var_info) = super::util::process_type_fncy(&type_fncy);
+
+        if var_info.is_var_ref { panic!("return type cannot be of type var_ref: v&\nUse <type> or &v <type> instead") }
+        if !var_info.is_ref && var_info.is_var { panic!("return type cannot be explicitly mutable\nUse <type> or &v <type> instead") }
+
+        ReturnType {
+            type_fncy,
+            type_rs,
+            var_info
+        }
+    }
 }
 
 
@@ -95,4 +131,9 @@ pub fn fun_def_handler(code: &[String]) -> (Fun, usize) {
 
 fn fun_call_handler(code: &Vec<String>) {
 
+}
+
+
+fn uhhh(something: &mut String) -> &mut String {
+    something
 }

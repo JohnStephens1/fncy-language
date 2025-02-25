@@ -1,5 +1,4 @@
-use super::util::split_type_fncy_raw;
-use super::util::get_type_rs;
+use super::util::process_type_fncy;
 
 
 #[derive(Debug, PartialEq)]
@@ -11,15 +10,11 @@ pub struct Var {
     pub value: Vec<String>
 }
 
+//todo
+//later: add formatters for use cases, type_fncy and type_rs
 impl Var {
     pub fn new(name: String, type_fncy_raw: String, value: Vec<String>) -> Self {
-        //todo
-        //opt translate value
-        //later: add formatters for use cases, type_fncy and type_rs
-
-        let (prev, type_fncy) = split_type_fncy_raw(&type_fncy_raw);
-        let var_info = VarInfo::new(&prev);
-        let type_rs = get_type_rs(&type_fncy);
+        let (type_fncy, type_rs, var_info) = process_type_fncy(&type_fncy_raw);
 
         Self {
             name,

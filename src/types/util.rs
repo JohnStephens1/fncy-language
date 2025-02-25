@@ -50,3 +50,12 @@ pub fn get_type_rs(type_fncy: &String) -> String {
 
     type_rs
 }
+
+
+pub fn process_type_fncy(type_fncy_raw: &String) -> (String, String, super::var::VarInfo) {
+    let (prev, type_fncy) = split_type_fncy_raw(&type_fncy_raw);
+    let type_rs = get_type_rs(&type_fncy);
+    let var_info = super::var::VarInfo::new(&prev);
+
+    (type_fncy, type_rs, var_info)
+}
