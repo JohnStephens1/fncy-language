@@ -202,7 +202,6 @@ pub fn main() {
     
     // test_le_fun();
 
-    test_fncy_boi();
     // test_let_handler();
     // types::test_extract_var_info();
     // imatacompletefkinlossxd();
@@ -210,56 +209,6 @@ pub fn main() {
     // test_map();
 }
 
-
-
-fn test_fncy_boi() {
-    let test_strings: Vec<&str> = vec![
-        "v&&&vhello",
-        "&&&vhello",
-        "&&vhello",
-        "&vhello",
-        "vhello",
-        "v&vhello",
-        "&&&vvhello",
-        "v&vvvvvv",
-        "vvvvv",
-        "hellou",
-        "Vhello",
-        "v&Vhello",
-        "v&& vpataht",
-        "&&& hello",
-        "&&hello",
-        "&hello",
-    ];
-
-    let results_expected: Vec<Vec<String>> = [
-        ["v&&&v", "hello"],
-        ["&&&v", "hello"],
-        ["&&v", "hello"],
-        ["&v", "hello"],
-        ["v", "hello"],
-        ["v&v", "hello"],
-        ["&&&v", "vhello"],
-        ["v&v", "vvvvv"],
-        ["v", "vvvv"],
-        ["", "hellou"],
-        ["", "Vhello"],
-        ["v&", "Vhello"],
-        ["v&&v", "pataht"],
-        ["&&&", "hello"],
-        ["&&", "hello"],
-        ["&", "hello"]
-    ].into_iter().map(|x| x.into_iter().map(String::from).collect()).collect();
-
-    let results: Vec<Vec<String>> = test_strings.iter().map(|x| crate::types::util::and_another_fncy_type_splitter(x))
-    .map(|x| vec![x.0, x.1]).collect();
-
-    assert_eq!(&results_expected, &results);
-
-    // let mah_boi = crate::types::util::split_type_fncy_raw(&test);
-
-    dbg!(&results);
-}
 
 
 fn test_le_fun() {
