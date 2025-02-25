@@ -17,37 +17,10 @@ pub fn get_param_type_hashmap() -> HashMap<String, String> {
     .collect()
 }
 
-// the question is, include & value -> &v alue?
-// guess for more complex types capital letters are in order
+// currently behaves like this:
+// & value -> &v alue
+// & Value -> & Value
 pub fn split_type_fncy_raw(string: &str) -> (String, String) {
-    let chars: Vec<char> = string.chars().collect();
-    let mut i = 0;
-
-    let mut prev: &[char] = &chars[0..0];
-    let mut le_type: &[char] = &chars[0..0];
-
-    let mut last_char: char = ' ';
-    while i < chars.len() {
-        if chars[i]=='v' && last_char!='v' {
-            last_char = chars[i];
-            i += 1;
-        } else if chars[i]=='&' {
-            last_char = chars[i];
-            i += 1;
-        } else {
-            prev=&chars[..i];
-            le_type=&chars[i..];
-            break
-        }
-    }
-
-    let prev_res = prev.iter().collect::<String>();
-    let type_fncy = le_type.iter().collect::<String>();
-
-    (prev_res, type_fncy)
-}
-
-pub fn and_another_fncy_type_splitter(string: &str) -> (String, String) {
     let chars: Vec<char> = string.chars().filter(|x| !x.is_whitespace()).collect();
 
     let mut end = 0;
@@ -56,7 +29,7 @@ pub fn and_another_fncy_type_splitter(string: &str) -> (String, String) {
     for (i, char) in chars.iter().enumerate() {
         match (i, char) {
             (0, 'v') => {}
-            (_, 'v') => { if last_char == '&' { end+=1 } break } //final v reached
+            (_, 'v') => { if last_char == '&' { end+=1 } break }
             (_, '&') => {}
             _ => { break }
         }

@@ -259,8 +259,6 @@ fn test_fncy_boi() {
     // let mah_boi = crate::types::util::split_type_fncy_raw(&test);
 
     dbg!(&results);
-
-
 }
 
 
