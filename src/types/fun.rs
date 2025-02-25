@@ -8,25 +8,26 @@ use crate::util::processing;
 pub struct Fun {
     pub name: String,
     pub parameters: Vec<Var>,
-    pub return_type: String,
+    pub return_type: ReturnType,
     pub code: Vec<String>
 }
 
 // todo
 // automate parameter getting
 impl Fun {
-    pub fn new(name: String, parameters: Vec<Var>, return_type_fncy_raw: String, code: &[String]) -> Self {
+    pub fn new(name: String, parameters: Vec<Var>, return_type_fncy_raw: String, code: Vec<String>) -> Self {
         let return_type = ReturnType::new(return_type_fncy_raw);
 
         Fun {
             name,
             parameters,
             return_type,
-            code: code.to_vec()
+            code
         }
     }
 }
 
+#[derive(Debug)]
 pub struct ReturnType {
     pub type_fncy: String,
     pub type_rs: String,
@@ -119,21 +120,16 @@ pub fn fun_def_handler(code: &[String]) -> (Fun, usize) {
     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
     let fun_code = code[start_of_code..=end_of_code].to_vec();
 
-    let my_fun = Fun {
-        name: fun_name,
-        parameters: fun_params,
+    let my_fun = Fun::new(
+        fun_name,
+        fun_params,
         return_type,
-        code: fun_code
-    };
+        fun_code
+    );
 
     (my_fun, end_of_code)
 }
 
 fn fun_call_handler(code: &Vec<String>) {
 
-}
-
-
-fn uhhh(something: &mut String) -> &mut String {
-    something
 }

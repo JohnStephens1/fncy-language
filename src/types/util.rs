@@ -45,6 +45,8 @@ pub fn split_type_fncy_raw(string: &str) -> (String, String) {
 }
 
 pub fn get_type_rs(type_fncy: &String) -> String {
+    if type_fncy.is_empty() { return "".to_string() }
+
     let le_map = get_param_type_hashmap();
     let type_rs = le_map.get(type_fncy).unwrap_or_else(|| { println!("didn't get a proper type! {}", type_fncy); type_fncy }).to_string();
 
@@ -54,8 +56,10 @@ pub fn get_type_rs(type_fncy: &String) -> String {
 
 pub fn process_type_fncy(type_fncy_raw: &String) -> (String, String, super::var::VarInfo) {
     let (prev, type_fncy) = split_type_fncy_raw(&type_fncy_raw);
-    let type_rs = get_type_rs(&type_fncy);
+    let type_rs = if type_fncy.is_empty() { "".to_string() } else { get_type_rs(&type_fncy) };
     let var_info = super::var::VarInfo::new(&prev);
+
+    // if type_fncy.is_empty() { println!("received empty type_fncy in process_type_fncy") }
 
     (type_fncy, type_rs, var_info)
 }
