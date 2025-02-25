@@ -4,7 +4,6 @@ use super::util::get_type_rs;
 
 #[derive(Debug, PartialEq)]
 pub struct Var {
-    // add references
     pub name: String,
     pub type_fncy: String,
     pub type_rs: String,
@@ -24,7 +23,7 @@ impl Var {
 
         Self {
             name,
-            type_fncy: type_fncy_raw,
+            type_fncy,
             type_rs,
             var_info,
             value
