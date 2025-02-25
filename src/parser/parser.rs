@@ -77,49 +77,9 @@ fn expression_handler(code: &Vec<String>) {
 }
 
 
-// todo implement translate_type_fncy
-// fn get_parameter(name: String, type_fncy: String, default_value: String) -> types::Parameter {
-//     let le_map = types::get_param_type_hashmap();
-//     let type_rs = le_map.get(&type_fncy).unwrap().clone();
-
-//     types::Parameter {
-//         name,
-//         type_fncy,
-//         type_rs,
-//         default_value
-//     }
-// }
-
-
 fn get_fun(slice: &[String]) {
 
 }
-
-// fn fun_def_handler(code: &[String]) -> (Fun, usize) {
-//     if code.first().expect("no fun, nothing at all tbh") != "fun" { panic!("no fun indeed") };
-
-//     let fun_name = code[1].clone();
-
-//     let end_of_params = processing::get_i_of_next_matching_parenthesis(&code[2..]) + 2;
-//     let raw_params = &code[2..=end_of_params];
-//     let fun_params = Fun::fun::get_parameters(raw_params);
-
-//     let start_of_code = end_of_params + code[end_of_params..].iter().position(|s| s == "{").expect("no { after fun_def");
-//     let raw_return_type = &code[end_of_params+1..start_of_code];
-//     let return_type = if raw_return_type.is_empty() { "".to_string() } else { raw_return_type[1..].join(" ") };
-
-//     let end_of_code = start_of_code + processing::get_i_of_next_matching_brace(&code[start_of_code..]);
-//     let fun_code = code[start_of_code..=end_of_code].to_vec();
-
-//     let my_fun = Fun {
-//         name: fun_name,
-//         parameters: fun_params,
-//         return_type,
-//         code: fun_code
-//     };
-
-//     (my_fun, end_of_code)
-// }
 
 fn fun_call_handler(code: &Vec<String>) {
 
@@ -193,25 +153,11 @@ fn run_parser(code: &Vec<String>) {
 
 pub fn main() {
     let code: Vec<String> = different_approach::main().split(" ").map(String::from).collect();
+
     run_parser(&code);
-    
-    // test_le_fun();
-
-    // test_let_handler();
-    // types::test_extract_var_info();
-    // imatacompletefkinlossxd();
-    // test_get_variable();
-    // test_map();
 }
 
 
-
-fn test_le_fun() {
-    let test: Vec<String> = "( hello : && vint , my : int = 5 , name : int = 5 * 5 * 5 , jeff : int )".split(" ").map(String::from).collect();
-    // dbg!(&test[1..test.len()-1]);
-
-    crate::types::fun::get_parameters(&test);
-}
 
 
 fn test_get_variable() {
