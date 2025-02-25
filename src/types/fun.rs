@@ -19,7 +19,7 @@ pub fn get_parameters(strings: &[String]) -> Vec<Var>{
     let mut last_id_char = ",";
 
     let mut var_vec: Vec<Var> = Vec::new();
-    if strings.is_empty() { return var_vec }
+    if strings == ["(", ")"] { return var_vec }
 
     let mut name = "".to_string();
     let mut type_fncy = "".to_string();
