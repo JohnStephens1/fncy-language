@@ -27,15 +27,30 @@ impl Fun {
     }
 }
 
+impl Fun {
+    pub fn fun_def_to_rs_string(&self) -> String {
+        format!("fn {} ( {} ) -> {} {{ {} }}",
+            self.name,
+            self.parameters_to_rs_string(), // parameters
+            self.return_type.to_rs_string(), // return
+            // how to handle code? preprocess?
+            "" // code
+        )
+    }
+}
+
 // might wanna create a struct for parameters
-// impl Fun {
-//     pub fn parameters_to_rs_string(&self) -> String {
-//         for param in self.parameters.iter() {
-//             param.
-//         }
-//         "".to_string()
-//     }
-// }
+impl Fun {
+    pub fn parameters_to_rs_string(&self) -> String {
+        self.parameters.iter().map(|param|
+            format!("{}: {}",
+                param.name.clone(),
+                param.type_rs.clone() // not handling references & mutability
+                // default value needs to be handled on call
+            )
+        ).collect::<Vec<String>>().join(", ")
+    }
+}
 
 #[derive(Debug)]
 pub struct ReturnType {
