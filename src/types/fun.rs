@@ -29,10 +29,10 @@ impl Fun {
 
 impl Fun {
     pub fn fun_def_to_rs_string(&self) -> String {
-        format!("fn {} ( {} ) -> {} {{ {} }}",
+        format!("fn {} ( {} ){} {{ {} }}",
             self.name,
             self.parameters_to_rs_string(),
-            self.return_type.to_rs_string(),
+            if self.return_type.type_rs != "" { format!(" -> {}", self.return_type.to_rs_string()) } else { "".to_string() },
             // how to handle code? preprocess?
             "" // code
         )
