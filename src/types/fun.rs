@@ -39,6 +39,8 @@ impl Fun {
     }
 }
 
+// todo
+// fix type_rs processing
 // might wanna create a struct for parameters
 impl Fun {
     pub fn parameters_to_rs_string(&self) -> String {
