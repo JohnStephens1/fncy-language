@@ -84,7 +84,7 @@ fn test_extract_var_info() {
 }
 
 #[test]
-fn test_return_type_to_rs_string() {
+fn test_return_type_rs_string() {
     let test_results: Vec<String> = [
         "int",
         "&int",
@@ -93,7 +93,7 @@ fn test_return_type_to_rs_string() {
         "&&vint"
     ].into_iter().map(
         |x| fun::Fun::new("le_name".to_string(), vec![], x.to_string(), vec![])
-        .return_type.to_rs_string(),
+        .return_type.type_rs_string,
     ).collect();
 
     let expected_results: Vec<String> = [

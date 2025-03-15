@@ -29,10 +29,11 @@ impl Fun {
 
 impl Fun {
     pub fn fun_def_to_rs_string(&self) -> String {
-        format!("fn {} ( {} ){} {{ {} }}",
+        format!(
+            "fn {} ( {} ){} {{ {} }}",
             self.name,
             self.parameters_to_rs_string(),
-            if self.return_type.type_rs != "" { format!(" -> {}", self.return_type.to_rs_string()) } else { "".to_string() },
+            if self.return_type.type_rs != "" { format!(" -> {}", self.return_type.type_rs_string) } else { "".to_string() },
             // how to handle code? preprocess?
             "" // code
         )
@@ -40,16 +41,12 @@ impl Fun {
 }
 
 // todo
-// fix type_rs processing
 // might wanna create a struct for parameters
+// default value needs to be handled on call
 impl Fun {
     pub fn parameters_to_rs_string(&self) -> String {
         self.parameters.iter().map(|param|
-            format!("{}: {}",
-                param.name.clone(),
-                param.type_rs.clone() // not handling references & mutability
-                // default value needs to be handled on call
-            )
+                param.type_name_rs_string.clone()
         ).collect::<Vec<String>>().join(", ")
     }
 }
@@ -75,18 +72,6 @@ impl ReturnType {
             type_rs_string,
             var_info
         }
-    }
-}
-
-impl ReturnType {
-    // cant be var_ref
-    // can only be var if reference
-    pub fn to_rs_string(&self) -> String {
-        format!("{}{}{}",
-            std::iter::repeat("&").take(self.var_info.ref_count).collect::<String>(),
-            if self.var_info.is_ref && self.var_info.is_var { "mut " } else { "" },
-            self.type_rs.clone()
-        )
     }
 }
 
