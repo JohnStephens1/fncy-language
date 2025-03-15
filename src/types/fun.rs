@@ -27,6 +27,16 @@ impl Fun {
     }
 }
 
+// might wanna create a struct for parameters
+// impl Fun {
+//     pub fn parameters_to_rs_string(&self) -> String {
+//         for param in self.parameters.iter() {
+//             param.
+//         }
+//         "".to_string()
+//     }
+// }
+
 #[derive(Debug)]
 pub struct ReturnType {
     pub type_fncy: String,
@@ -50,15 +60,12 @@ impl ReturnType {
 }
 
 impl ReturnType {
+    // cant be var_ref
+    // can only be var if reference
     pub fn to_rs_string(&self) -> String {
-        format!("{}{}{}{}",
-            // is_var_ref
-            "",
-            // ref count
+        format!("{}{}{}",
             std::iter::repeat("&").take(self.var_info.ref_count).collect::<String>(),
-            // is_var
-            if self.var_info.is_var { "mut " } else { "" },
-            // type_rs
+            if self.var_info.is_ref && self.var_info.is_var { "mut " } else { "" },
             self.type_rs.clone()
         )
     }

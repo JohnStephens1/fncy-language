@@ -82,3 +82,27 @@ fn test_extract_var_info() {
 
     assert_eq!(&expected_results, &results);
 }
+
+#[test]
+fn test_return_type_to_rs_string() {
+    let test_results: Vec<String> = [
+        "int",
+        "&int",
+        "&&int",
+        "&vint",
+        "&&vint"
+    ].into_iter().map(
+        |x| fun::Fun::new("le_name".to_string(), vec![], x.to_string(), vec![])
+        .return_type.to_rs_string(),
+    ).collect();
+
+    let expected_results: Vec<String> = [
+        "i32",
+        "&i32",
+        "&&i32",
+        "&mut i32",
+        "&&mut i32"
+    ].into_iter().map(String::from).collect();
+
+    assert_eq!(&expected_results, &test_results);
+}
