@@ -1,11 +1,10 @@
-use super::util::process_type_fncy;
-
-
 #[derive(Debug, PartialEq)]
 pub struct Var {
     pub name: String,
     pub type_fncy: String,
     pub type_rs: String,
+    pub type_rs_string: String,
+    pub type_name_rs_string: String,
     pub var_info: VarInfo,
     pub value: Vec<String>
 }
@@ -14,12 +13,15 @@ pub struct Var {
 //later: add formatters for use cases, type_fncy and type_rs
 impl Var {
     pub fn new(name: String, type_fncy_raw: String, value: Vec<String>) -> Self {
-        let (type_fncy, type_rs, var_info) = process_type_fncy(&type_fncy_raw);
+        let (type_fncy_isolated, type_rs_isolated, type_rs_string, var_info) = super::util::process_type_fncy(&type_fncy_raw);
+        let type_name_rs_string = super::util::get_type_name_rs_string(&name, &type_rs_isolated, &var_info);
 
         Self {
             name,
-            type_fncy,
-            type_rs,
+            type_fncy: type_fncy_isolated,
+            type_rs: type_rs_isolated,
+            type_rs_string,
+            type_name_rs_string,
             var_info,
             value
         }

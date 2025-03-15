@@ -54,12 +54,34 @@ pub fn get_type_rs(type_fncy: &String) -> String {
 }
 
 
-pub fn process_type_fncy(type_fncy_raw: &String) -> (String, String, super::var::VarInfo) {
-    let (prev, type_fncy) = split_type_fncy_raw(&type_fncy_raw);
-    let type_rs = if type_fncy.is_empty() { "".to_string() } else { get_type_rs(&type_fncy) };
+pub fn get_type_name_rs_string(var_name: &String, type_rs_isolated: &String, var_info: &super::var::VarInfo) -> String {
+    if type_rs_isolated.is_empty() { return "".to_string() }
+
+    format!(
+        "{}{}: {}",
+        if (var_info.is_ref && var_info.is_var_ref) || (!var_info.is_ref && var_info.is_var) { "mut " } else { "" },
+        var_name,
+        get_type_rs_string(type_rs_isolated, var_info)
+    )
+}
+
+pub fn get_type_rs_string(type_rs_isolated: &String, var_info: &super::var::VarInfo) -> String {
+    if type_rs_isolated.is_empty() { return "".to_string() }
+    
+    format!(
+        "{}{}{}",
+        std::iter::repeat("&").take(var_info.ref_count).collect::<String>(),
+        if var_info.is_ref && var_info.is_var { "mut " } else { "" },
+        type_rs_isolated
+    )
+}
+
+
+pub fn process_type_fncy(type_fncy_raw: &String) -> (String, String, String, super::var::VarInfo) {
+    let (prev, type_fncy_isolated) = split_type_fncy_raw(&type_fncy_raw);
+    let type_rs_isolated = if type_fncy_isolated.is_empty() { "".to_string() } else { get_type_rs(&type_fncy_isolated) };
     let var_info = super::var::VarInfo::new(&prev);
+    let type_rs_string = get_type_rs_string(&type_rs_isolated, &var_info);
 
-    // if type_fncy.is_empty() { println!("received empty type_fncy in process_type_fncy") }
-
-    (type_fncy, type_rs, var_info)
+    (type_fncy_isolated, type_rs_isolated, type_rs_string, var_info)
 }

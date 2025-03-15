@@ -106,3 +106,16 @@ fn test_return_type_to_rs_string() {
 
     assert_eq!(&expected_results, &test_results);
 }
+
+
+// todo
+// implement
+#[test]
+fn test_get_type_name_string_rs() {
+    // dbg!(util::get_type_name_rs_string(&"var_name".to_string(), &"i32".to_string(), &var::VarInfo::new(&"v&&v".to_string())));
+}
+
+#[test]
+fn test_get_type_string_rs() {
+
+}

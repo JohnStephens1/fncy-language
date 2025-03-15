@@ -58,12 +58,15 @@ impl Fun {
 pub struct ReturnType {
     pub type_fncy: String,
     pub type_rs: String,
+    pub type_rs_string: String,
     pub var_info: VarInfo
 }
 
+//todo
+// fix ;-;
 impl ReturnType {
     pub fn new(type_fncy: String) -> Self {
-        let (type_fncy, type_rs, var_info) = super::util::process_type_fncy(&type_fncy);
+        let (type_fncy, type_rs, type_rs_string, var_info) = super::util::process_type_fncy(&type_fncy);
 
         if var_info.is_var_ref { panic!("return type cannot be of type var_ref: v&\nUse <type> or &v <type> instead") }
         if !var_info.is_ref && var_info.is_var { panic!("return type cannot be explicitly mutable\nUse <type> or &v <type> instead") }
@@ -71,6 +74,7 @@ impl ReturnType {
         ReturnType {
             type_fncy,
             type_rs,
+            type_rs_string,
             var_info
         }
     }
