@@ -31,8 +31,8 @@ impl Fun {
     pub fn fun_def_to_rs_string(&self) -> String {
         format!("fn {} ( {} ) -> {} {{ {} }}",
             self.name,
-            self.parameters_to_rs_string(), // parameters
-            self.return_type.to_rs_string(), // return
+            self.parameters_to_rs_string(),
+            self.return_type.to_rs_string(),
             // how to handle code? preprocess?
             "" // code
         )
