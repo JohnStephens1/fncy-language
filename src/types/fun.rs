@@ -49,6 +49,21 @@ impl ReturnType {
     }
 }
 
+impl ReturnType {
+    pub fn to_rs_string(&self) -> String {
+        format!("{}{}{}{}",
+            // is_var_ref
+            "",
+            // ref count
+            std::iter::repeat("&").take(self.var_info.ref_count).collect::<String>(),
+            // is_var
+            if self.var_info.is_var { "mut " } else { "" },
+            // type_rs
+            self.type_rs.clone()
+        )
+    }
+}
+
 
 // proper type_fncy -> type_rs conversion needs to be done in Var
 pub fn get_parameters(strings: &[String]) -> Vec<Var>{

@@ -123,6 +123,8 @@ fn analyze_code(code: &Vec<String>) {
             "fun" => {
                 start = i;
                 let (my_fun, end) = fun::fun_def_handler(&code[i..]);
+                dbg!(&my_fun);
+                dbg!(my_fun.return_type.to_rs_string());
                 fun_start_end.push((start, end));
                 i += end;
             },
